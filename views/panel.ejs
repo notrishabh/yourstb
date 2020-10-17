@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+                <link type="text/css" rel="stylesheet" href="http://dinus.org/assets/mail/mailtip.css"/>
+                <script type="text/javascript" src="http://dinus.org/assets/mail/jquery.mailtip.js"></script>
+
+
+                <style>
+                        .jumbotron{
+                                background-color: rgba(255, 0, 0, 0.658);
+                        
+                        }
+                        #name
+                        {
+                                color:rgba(248, 227, 201, 0.993);
+                        }
+                        
+                        .img-thumbnail{
+                                width: 300px;
+                        }
+                        
+                        .radiotext {
+                                  margin: 10px 10px 0px 0px;
+                            }
+                        #total{
+                          border: none;
+                          font-size: 32px;
+                        }
+                        #pay
+                        {
+                                float: right;
+                        }
+                </style>
+              </head>
+    <body>
+        <div class = "container"><h1 class="jumbotron">Welcome <span id = "name"><%= data.name %></span></h1>
+        
+        <div class="row">
+        <div class="col-md-6"><img src="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png" alt="..." class="img-thumbnail"></div>
+
+
+        <div class="col-md-6"><div class="panel-group">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a data-toggle="collapse" href="#collapse1">Identity Box</a>
+                    </h4>
+                  </div>
+                  <div id="collapse1" class="panel-collapse collapse">
+                    <ul class="list-group">
+                      <li class="list-group-item">Name : <%= data.name %></li>
+                      <li class="list-group-item">Address : <%= data.address %></li>
+                      <li class="list-group-item" id="stbbb" value = '<%= data.stbb %>'>Stb No. : <%= data.stbb %></li>
+                      <li class="list-group-item">Mobile No. : <%= data.mobile %></li>
+                    </ul>
+                </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              <h1>Payment History and Balance</h1>
+              <table class="table">
+                        <thead class="thead-dark">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Month</th>
+                            <th scope="col">Paid Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>June</td>
+                            <% if(data.june) { %> 
+                                <td class="bg-success">Paid</td>
+                            <%  } 
+                            else { %>
+                                <td class="bg-danger">Unpaid</td>
+                            <% } %>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>July</td>
+                            <% if(data.july) { %> 
+                                <td class="bg-success">Paid</td>
+                            <%  } 
+                            else { %>
+                                <td class="bg-danger">Unpaid</td>
+                            <% } %>
+                          </tr>
+                        </tbody>
+                      </table>
+                
+                <h1>Package Select</h1>
+                <table class="table table-responsive">
+                  <thead>
+                      <tr>
+                          <th>Amount</th>
+                          <th>Package</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <form name="form">
+                      <tr>
+                          <td>
+                              <div class="radio">
+                                  <label><input type="radio" id='regular' name="group1" value="153.40">₹153.40</label>
+                              </div>
+                          </td>
+                          <td>
+                          <div class="radiotext">
+                              <label for='regular'>Basic Pack</label>
+                          </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>
+                              <div class="radio">
+                                  <label><input type="radio" id='express' name="group1" value="275">₹275</label>
+                             </div>
+                          </td>
+                          <td>
+                              <div class="radiotext">
+                                  <label for='express'>Silver Pack</label>
+                              </div>
+                          </td>
+                      </tr>
+                      <tr>
+                        <td>
+                            <div class="radio">
+                                <label><input type="radio" id='express' name="group1" value="360">₹360</label>
+                           </div>
+                        </td>
+                        <td>
+                            <div class="radiotext">
+                                <label for='express'>Gold Pack</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td>
+                          <div class="radio">
+                              <label><input type="radio" id='express' name="group1" value="454">₹454</label>
+                         </div>
+                      </td>
+                      <td>
+                          <div class="radiotext">
+                              <label for='express'>Diamond Pack</label>
+                          </div>
+                      </td>
+                  </tr>
+                      </form>
+                      </tbody>
+             </table>
+             <input type="button" onclick="total()" value="Calculate Amount" class="btn btn-primary">
+             <br><br>
+             <input type="text" id="total">
+             <button id="pay" class="btn btn-lg btn-primary"
+             onclick="txn()">Pay Now <span class="glyphicon glyphicon-check"></span></button>
+             
+             <div class="row">
+              <center><h1>Send your Complaints to Us !</h1></center>
+                  <div class="col-md-4"></div>
+                  <div class="col">
+                      <div class="panel panel-default">
+                              <div class="panel-body">
+                                  <div class="col-md-12 row" style="padding:0px;margin-bottom:10px;">
+                                      
+                                      <div class="col-md-2">
+                                          <img src="http://dinus.org/img/fakultas/FIK/cs/cs.svg">
+                                          <div style="margin-left:30px;">
+                                              <img src="http://dinus.org/img/fakultas/FIK/cs/cs.png" width="70px" height="70px" class="img-circle" style="border:3px solid #052C52;">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-10">
+                                          <hr>
+                                          <p style="padding-left:55px;font-size:32px;"><strong>KV CABLE</strong></p>
+                                          
+                                      </div>
+                                      
+                                      
+                                  </div>
+          
+                                  <form action="send" method="POST">
+                                      <table class="table">
+                                            <tr>
+                                                    <td>
+                                                        <input class="form-control" type="text" name = "stb" value="<%= data.stbb %>" readonly >
+                                                    </td>
+                                            </tr>
+                                          <tr>
+                                              <td>
+                                                  <input type="email" class="form-control"  id="mailtip2" name="mail" placeholder="Your e-mail">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                                <input class="form-control" type="text" name = "name" placeholder="Name">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                              <input class="form-control" type="text" placeholder="<%= data.address %>" readonly>
+                                          </td>
+                                      </tr>
+                                          <tr>
+                                              <td>
+                                                  <input class="form-control" type="text" name="error" placeholder="No. displayed on screen">
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td>
+                                                  <textarea class="form-control" rows="4" name= "msg" placeholder="Message text . . ."></textarea>
+                                              </td>
+                                          </tr>
+                                          <tr>
+                                              <td>
+                                                  <button class="btn btn-danger btn-sm" style="width: 100%;"><i class="fa fa-envelope-o" style="padding-right: 5px;"></i> Send</button>
+                                              </td>
+                                          </tr>
+                                      </table>
+          
+                                  </form>
+                              </div>
+                          </div>
+          
+                      </div>
+          
+                  </div>
+            </div>
+          </div>
+          
+          
+        
+        <script>
+          function total()
+          {
+          var txt = "";
+          for(var i=0; i<document.form.group1.length; i++){
+             if(document.form.group1[i].checked){
+              txt = txt + document.form.group1[i].value + " ";
+              document.getElementById("total").value = "Amount to be paid: " + txt;
+              window.value = txt;
+             }
+           }
+
+          }
+          function txn()
+            {
+              var url = 'txn.html?stb=' + document.getElementById("stbbb").value + "&amount=" + window.value;
+              window.location.href = url; 
+            }
+
+            // $(function comp(){
+            //               var info = $('.info');
+            //               $('#mailtip2').mailtip({
+            //               onselected: function (mail){
+            //               info.text('you choosed email: ' + mail)
+            //               }
+        // });
+
+        // });
+        // function comp() {
+        //   window.location.href = 'customer.html';
+        // }
+        </script>
+    </body>
+</html>

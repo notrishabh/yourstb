@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<HTML>
+    <TITLE>Customer Login</TITLE>
+    <HEAD>
+        <h1>CCN DEN</h1>
+        <style>
+            h1{
+                
+                background: rgba(255, 0, 0, 0.658);
+                margin-top: 0px;
+                padding: 20px;
+                text-align: center;
+                font-size: 42px;
+            }
+           #loginbox
+           {
+               border: solid black;
+               border-width: 0.1px;
+               box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.514);
+               width: 600px;
+               height: 250px;
+               margin: auto;
+               position: relative;
+               margin-top: 10%;
+               text-align: center;
+           } 
+           h3{
+               font-size: 26px;
+               text-align: center;
+               background: rgba(255, 0, 0, 0.658);
+               padding: 10px;
+               margin: 0px;
+           }
+           label{
+                padding: 50px;             
+           }
+           input{
+               width: 200px;
+               margin-top: 50px;
+               margin-bottom: 20px;
+           }
+           
+           button{
+               background: rgba(255, 0, 0, 0.658);
+               width: 100px;
+               padding: 5px;
+               font-size: 15px;
+               font-weight: bold;
+               cursor: pointer;
+               border: solid rgba(255, 0, 0, 0.438);
+           }
+           button:hover
+           {
+               background: rgba(255, 0, 0, 0.438);
+           }
+        </style>
+    </HEAD>
+    <BODY>
+        <form id="loginbox" action = "auth" method="POST">
+            <h3>Login for Customer</h3>
+            <label>STB No.</label>
+            <input type="text" placeholder="Enter STB No." name="stb"><br>
+            <button type="submit id="btn">Login</button>
+            <p>Not Customer?  <a href="index.html">Admin Login</a></p>         
+        </form>
+    </BODY>
+</HTML>

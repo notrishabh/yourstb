@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+      <script src="https://kit.fontawesome.com/66830fba27.js" crossorigin="anonymous"></script>
+        <style>
+            .jumbotron{
+                text-align: center;
+                background-color: rgba(255, 0, 0, 0.658);
+                color:rgba(255, 226, 191, 0.993);
+                font-size: 36px;
+                margin: 0;
+            }
+            .fa-bell{
+              font-size: 100px;
+            }
+            .material-icons{
+              font-size: 100px;
+              margin-top: 100px;
+              margin-left: 35%;
+            }
+            .text{
+              margin-left: 35%;
+            }
+
+
+
+        </style>
+    </head>
+    <title>Admin Panel</title>
+    <body>
+      <a href="/admin/logout">Logout</a>
+        <h1 class="jumbotron">ADMIN PANEL for <%= name %></h1>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
+              <a href="notification.html">
+                <i class="material-icons" class="icon">
+                notification_important</i>
+          <p class="text">Notifications</p>
+        </a>
+            </div>
+            <div class="col-sm">
+              <a href="payment.html">
+                <i class="material-icons" class="icon">
+                payment</i>
+          <p class="text">Payments</p>
+        </a>
+            </div>
+            <div class="col-sm">
+              <a href="complaint.html">
+                <i class="material-icons" class="icon">
+                        question_answer</i>
+          <p class="text">Complaints</p>
+        </a>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-4">
+              <a href="offline.html">
+                <i class="material-icons" class="icon">
+                        store</i>
+          <p class="text">Offline Payment</p>
+        </a>
+            </div>
+            <div class="col-4">
+              <a href="full.html">
+                <i class="material-icons" class="icon">
+                        list_alt</i>
+          <p class="text">Full List</p>
+        </a>
+            </div>
+          </div>
+        </div>
+        
+ 
+        </body>
+</html>
