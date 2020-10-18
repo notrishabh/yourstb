@@ -76,28 +76,28 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
     
 });
 
-route.get('/no',(req,res)=>{
-    let sql = `SELECT SUM(Amount),month(Date) FROM payment GROUP BY month(Date)`;
+// route.get('/no',(req,res)=>{
+//     let sql = `SELECT SUM(Amount),month(Date) FROM payment GROUP BY month(Date)`;
 
-    let sql2 = `SELECT (SUM(t1.Amount) + SUM(t2.Amount)) AS SUMBITCH, t2.Stb, month(t1.Date) FROM payment t1 JOIN offline_payment t2 ON month(t1.Date)=month(t2.dateTime) GROUP BY month(Date)`
+//     let sql2 = `SELECT (SUM(t1.Amount) + SUM(t2.Amount)) AS SUMBITCH, t2.Stb, month(t1.Date) FROM payment t1 JOIN offline_payment t2 ON month(t1.Date)=month(t2.dateTime) GROUP BY month(Date)`
 
-    let sql3 = `SELECT payment.Amount FROM payment LEFT OUTER JOIN offline_payment ON month(payment.Date)=month(offline_payment.dateTime)`;
+//     let sql3 = `SELECT payment.Amount FROM payment LEFT OUTER JOIN offline_payment ON month(payment.Date)=month(offline_payment.dateTime)`;
 
-    let sql4 = `SELECT *
-    FROM offline_payment
-    LEFT OUTER JOIN payment ON month(payment.Date) = month(offline_payment.dateTime)
+//     let sql4 = `SELECT *
+//     FROM offline_payment
+//     LEFT OUTER JOIN payment ON month(payment.Date) = month(offline_payment.dateTime)
     
-    UNION ALL
+//     UNION ALL
     
-    SELECT *
-    FROM offline_payment
-    RIGHT OUTER JOIN payment ON month(payment.Date) = month(offline_payment.dateTime)
-    WHERE month(offline_payment.dateTime) IS NULL`;
-    db.query(sql4, (err,results)=>{
-        console.log(results);
-        res.send(JSON.stringify(results, null, 4));
-});
-});
+//     SELECT *
+//     FROM offline_payment
+//     RIGHT OUTER JOIN payment ON month(payment.Date) = month(offline_payment.dateTime)
+//     WHERE month(offline_payment.dateTime) IS NULL`;
+//     db.query(sql4, (err,results)=>{
+//         console.log(results);
+//         res.send(JSON.stringify(results, null, 4));
+// });
+// });
 
 
 route.get('/logout', (req,res)=>{

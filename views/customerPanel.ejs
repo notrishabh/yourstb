@@ -30,10 +30,6 @@
                         .radiotext {
                                   margin: 10px 10px 0px 0px;
                             }
-                        #total{
-                          border: none;
-                          font-size: 32px;
-                        }
                         #pay
                         {
                                 float: right;
@@ -45,9 +41,27 @@
                             margin-top: 15px;
                             padding: 12px;
                         }
+
+                        @media only screen and (max-width: 750px) {
+                            #navbar-right-link {
+                                margin-left: 50px;
+                            }
+                        }
                         #navbar-right-link:hover{
                             color: #bb4747;
                         }
+                        #userImg{
+                            width: 15vw;
+                        }
+                        @media only screen and (max-width: 1000px) {
+                            #userImg {
+                                display: none;
+                            }
+                        }
+                        #historyHead{
+                            margin-top: 5%;
+                        }
+
                 </style>
               </head>
     <body>
@@ -55,7 +69,7 @@
         <div class = "container"><h1 class="jumbotron">Welcome <span id = "name"><%= data.Name %></span></h1>
         
         <div class="row">
-        <div class="col-md-6"><img src="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png" alt="..." class="img-thumbnail"></div>
+        <div class="col-md-6"><img src="user.svg" alt="..." id="userImg"></div>
 
 
         <div class="col-md-6"><div class="panel-group">
@@ -77,41 +91,37 @@
               </div>
               </div>
               </div>
-              <h1>Payment History and Balance</h1>
+              <h1 id="historyHead">Payment History and Balance</h1>
               <table class="table">
                         <thead class="thead-dark">
                           <tr>
                             <th scope="col">#</th>
                             <th scope="col">Month</th>
                             <th scope="col">Paid Status</th>
+                            <th scope="col">Amount Paid</th>
                           </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>June</td>
-                            <% if(data.June) { %> 
-                                <td class="bg-success">Paid</td>
-                            <%  } 
-                            else { %>
-                                <td class="bg-danger">Unpaid</td>
-                            <% } %>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>July</td>
-                            <% if(data.July) { %> 
-                                <td class="bg-success">Paid</td>
-                            <%  } 
-                            else { %>
-                                <td class="bg-danger">Unpaid</td>
-                            <% } %>
-                          </tr>
+                          <% for(var i=0; i<3; i++){ %>
+                            <tr>
+                                <th scope="row"><%=i+1%></th>
+                                <td><%= months[i] %></td>
+                                <% if(data[months[i]]) { %> 
+                                    <td class="bg-success">Paid</td>
+                                    <td class="bg-success"><i class="fas fa-rupee-sign"></i> <%=data[months[i]]%></td>
+                                <%  } 
+                                else { %>
+                                    <td class="bg-danger">Unpaid</td>
+                                    <td class="bg-danger"></td>
+                                <% } %>
+                              </tr>
+                          <%} %>
+
                         </tbody>
                       </table>
                 
             <div>
-            <h1>Select Package</h1>
+            <h1 id="historyHead">Select Package</h1>
             <table class="table table-responsive">
                 <thead>
                     <tr>
@@ -253,39 +263,10 @@
             </div>
           </div>
           
-          
+          <div class="panel panel-default">
+            <div class="panel-footer text-center">Copyright &copy; CCN DEN 2020</div>
+          </div>
+
         
-        <script>
-          function total()
-          {
-          var txt = "";
-          for(var i=0; i<document.form.group1.length; i++){
-             if(document.form.group1[i].checked){
-              txt = txt + document.form.group1[i].value + " ";
-              document.getElementById("total").value = "Amount to be paid: " + txt;
-              window.value = txt;
-             }
-           }
-
-          }
-          function txn()
-            {
-              var url = 'txn.html?stb=' + document.getElementById("stbbb").value + "&amount=" + window.value;
-              window.location.href = url; 
-            }
-
-            // $(function comp(){
-            //               var info = $('.info');
-            //               $('#mailtip2').mailtip({
-            //               onselected: function (mail){
-            //               info.text('you choosed email: ' + mail)
-            //               }
-        // });
-
-        // });
-        // function comp() {
-        //   window.location.href = 'customer.html';
-        // }
-        </script>
     </body>
 </html>

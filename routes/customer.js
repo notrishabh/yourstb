@@ -7,13 +7,21 @@ const checksum_lib = require('../checksum');
 
 
 
-
-
 route.get('/', ensureAuthenticated, (req,res)=>{
     console.log(req.user);
-    res.render('customerPanel', {
-        data : req.user
-    });
+    var months = ["August","September","October"];
+    var monthData = months.join();
+         
+       let sql = `SELECT ${monthData} FROM all_info WHERE Stb = "${req.user.Stb}"`;
+       db.query(sql, (err,results)=>{
+           res.render('customerPanel', {
+            data : req.user,
+            historyData : results,
+            months : months
+        });
+       });
+
+   
 });
 
 route.get('/logout', (req,res)=>{

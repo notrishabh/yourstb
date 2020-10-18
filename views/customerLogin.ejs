@@ -42,7 +42,7 @@
             font-size: 50px;
         }
         #form{
-            margin-top: 15%;
+            margin-top: 8%;
         }
         #quesmark{
             font-size: 40px;
@@ -62,6 +62,16 @@
         }
         #brandlogo{
             margin-left: 3%;
+        }
+        @media only screen and (max-width: 900px) {
+            #log {
+                display: none;
+            }
+            }
+        #log{
+            position: absolute;
+            opacity: 0.9;
+            width: 30vw;
         }
     </style>
 </head>
@@ -88,7 +98,7 @@
                   </div>
                   
             </div> 
-            <div class="col-md-4 ml-auto" id="form">
+            <div class="col-md-4 ml-auto mb-5" id="form">
                 <h4 style="margin-bottom: 5%;">Login as a Customer</h4>
                 <form action="/" method="POST" autocomplete="off">
                     <div class="form-group">
@@ -98,10 +108,12 @@
                         <input type="text" class="form-control" name="stbNumber" placeholder="XXXXXXXX" required>
                     </div>
                     <button type="submit" class="btn btn-outline-danger">Login</button>
+                    <img src="log.svg" id="log">
                 </form>
             </div>
+
         </div>
-    
+
         </div>
 
       

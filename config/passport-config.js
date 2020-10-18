@@ -27,10 +27,8 @@ module.exports = function(passport){
         let sql = `SELECT * FROM all_info WHERE Stb = "${stbNumber}" LIMIT 1`;   //Matching Criteria
         db.query(sql, (err, results)=>{
             if(results.length == 0){
-                console.log("fuck");
                 return done(null, false, {message : "No STB found."});
             }else{
-                console.log(results[0]);
                 return done(null, results[0]);
             }
         });
@@ -46,12 +44,12 @@ passport.serializeUser((user,done)=> {
         
 });
 passport.deserializeUser((id, done)=> {
-    if(id < 100){
+    if(id < 100 ){
         db.query(`SELECT * FROM admin_login WHERE id = ${id}`, (err, result)=>{
             done(null, result[0]);
         });
     }else{
-        db.query(`SELECT * FROM all_info WHERE Stb = ${id}`, (err, result)=>{
+        db.query(`SELECT * FROM all_info WHERE Stb = "${id}"`, (err, result)=>{
             done(null, result[0]);
         });
     }
