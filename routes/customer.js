@@ -47,7 +47,7 @@ route.post('/sendComplaint', (req,res)=>{
 });
 
 
-route.post('/txn' , (req,res)=>{
+route.post('/txn' , ensureAuthenticated, (req,res)=>{
     res.render('txn', {
         Stb : req.body.Stb,
         Mobile : req.body.Mobile,
@@ -91,7 +91,8 @@ route.post('/txn/payment', function(req, res){
     }	
     });
         route.post('/callback', function(req, res){ //ADD QUERY FOR INSERTING IN all_info with respective month in production
-            db.query('SELECT * FROM all_info WHERE Stb = ?', [req.query.stb], function(error, results, fields) {
+            let sql = `SELECT * FROM all_info WHERE Stb = "${req.query.stb}"`
+            db.query(sql, function(error, results, fields) {
                 var pay = 'INSERT INTO payment SET ?';
                 var values = {
                     Txn_Id : req.body.TXNID,
@@ -110,6 +111,7 @@ route.post('/txn/payment', function(req, res){
                 });
             });
         res.render('aftercallback.ejs', {
+            stb : req.query.stb,
             orderId : req.body.ORDERID,
             txnId : req.body.TXNID,
             txnAmount : req.body.TXNAMOUNT,
