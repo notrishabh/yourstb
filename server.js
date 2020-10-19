@@ -19,12 +19,21 @@ app.set('view engine', 'ejs'); //EJS Configuration
 app.use( express.static( "public" ) );
 
 //============Database Connection==============
+//PRODUCTION
 db = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : '',
-    database : 'ccn'
+    host : 'db4free.net',
+    user : 'dplayarrr',
+    password : 'dplayar123',
+    database : 'yourstb'
 });
+
+//TESTING
+// db = mysql.createConnection({
+//     host : 'localhost',
+//     user : 'root',
+//     password : '',
+//     database : 'ccn'
+// });
 
 db.connect((err)=>{
     if(!err){

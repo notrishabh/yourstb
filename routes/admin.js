@@ -24,10 +24,10 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 
     today = yyyy + '-' + mm + '-' + dd;
 
-    let sql = `SELECT SUM(Amount) AS total FROM payment WHERE MONTH(Date) = "${mm}"`;
+    let sql = `SELECT SUM(Amount) AS total FROM payment WHERE MONTH(dateTime) = "${mm}"`;
     db.query(sql,(err,results)=>{
         monthlyEarnings = results[0].total;
-        let sql = `SELECT SUM(Amount) AS total FROM payment WHERE YEAR(Date) = "${yyyy}"`;
+        let sql = `SELECT SUM(Amount) AS total FROM payment WHERE YEAR(dateTime) = "${yyyy}"`;
         db.query(sql, (err,results)=>{
             yearlyEarnings = results[0].total;
             let sql = `SELECT * FROM payment ORDER BY id DESC LIMIT 1`;
@@ -37,7 +37,7 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
                 let sql = `SELECT COUNT(id) AS total FROM complaint WHERE Checkbox = 0`;
                 db.query(sql, (err, results)=>{
                     totalComplaints = results[0].total;
-                    let sql = `SELECT SUM(Amount) AS sum,month(Date) AS month FROM payment GROUP BY month(Date)`;
+                    let sql = `SELECT SUM(Amount) AS sum,month(dateTime) AS month FROM payment GROUP BY month(dateTime)`;
                     db.query(sql, (err,results)=>{
                         sum = results;
                         let sql = `SELECT COUNT(id) AS onlineCount FROM payment`;

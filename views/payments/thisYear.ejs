@@ -61,8 +61,7 @@
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
-                      <th>Date</th>
-                      <th>Time</th>
+                      <th>Date & Time</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -74,14 +73,13 @@
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
-                      <th>Date</th>
-                      <th>Time</th>
+                      <th>Date & Time</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
-                        var date = results[i].Date.toString().split("00");
+                        var date = results[i].dateTime.toString().split("GMT");
                         %>
 
                         <tr>
@@ -93,7 +91,6 @@
                           <td><%= results[i].Stb %></td>
                           <td><%= results[i].Amount %></td>
                           <td><%= date[0] %></td>
-                          <td><%= results[i].Time %></td>
                         </tr>
 
                     <% } 
