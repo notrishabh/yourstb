@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyparser = require('body-parser');
+require('dotenv').config()
 port = process.env.PORT || 8000;
 const mysql = require('mysql');
 const session = require('express-session');
@@ -20,11 +21,17 @@ app.use( express.static( "public" ) );
 
 //============Database Connection==============
 //PRODUCTION
+// db = mysql.createConnection({
+//     host : 'db4free.net',
+//     user : 'dplayarrr',
+//     password : 'dplayar123',
+//     database : 'yourstb'
+// });
 db = mysql.createConnection({
-    host : 'db4free.net',
-    user : 'dplayarrr',
-    password : 'dplayar123',
-    database : 'yourstb'
+    host : process.env.DB_HOST,
+    user : process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_DB
 });
 
 //TESTING

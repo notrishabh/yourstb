@@ -81,8 +81,7 @@ route.post('/txn/payment', function(req, res){
             params['ORDER_ID']			    = 'TEST_'  + new Date().getTime();
             params['CUST_ID'] 			    = 'Customer001';
             params['TXN_AMOUNT']		    = Amount;
-            params['CALLBACK_URL']		    = 'http://yourstb.herokuapp.com/customerPanel/callback?stb='+Stb;
-            // params['CALLBACK_URL']		    = 'http://localhost:'+port+'/customerPanel/callback?stb='+Stb;
+            params['CALLBACK_URL']		    = 'http://localhost:'+port+'/customerPanel/callback?stb='+Stb;
             params['EMAIL']				    = 'abc@mailinator.com';
             params['MOBILE_NO']			    = Mobile;
 
