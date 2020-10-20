@@ -37,11 +37,24 @@ route.post('/sendComplaint', (req,res)=>{
    var msg = req.body.msg;
 
    db.query(`SELECT * FROM all_info WHERE Stb = "${stb}"`, (err,result)=>{
-
     let sql = 'INSERT INTO complaint SET ?'
-    var values = {Name : result[0].Name, Address : result[0].Address, Mobile : result[0].Mobile, Stb : result[0].Stb, Mail : mail, Error : error, Msg : msg};
+    var values = {
+        Name : result[0].Name,
+        Address : result[0].Address,
+        Mobile : result[0].Mobile, 
+        Stb : result[0].Stb, 
+        Mail : mail, 
+        Error : error,
+        Msg : msg, 
+        Checkbox : 0
+    };
     db.query(sql, values, (err,results)=>{
-        res.render('afterComplaint');
+        if(err){
+            console.log(err);
+        }else{
+            res.render('afterComplaint');
+    
+        }   
     });
    });
 });
