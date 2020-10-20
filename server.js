@@ -21,12 +21,6 @@ app.use( express.static( "public" ) );
 
 //============Database Connection==============
 //PRODUCTION
-// db = mysql.createConnection({
-//     host : 'db4free.net',
-//     user : 'dplayarrr',
-//     password : 'dplayar123',
-//     database : 'yourstb'
-// });
 db = mysql.createConnection({
     host : process.env.DB_HOST,
     user : process.env.DB_USER,
