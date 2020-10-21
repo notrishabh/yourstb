@@ -110,6 +110,7 @@ route.get('/logout', (req,res)=>{
 route.use('/payments', require('./payments'));
 route.use('/complaints', require('./complaints'));
 route.use('/offlinePayments', require('./offlinePayments'));
+route.use('/offlineComplaints', require('./offlineComplaints'));
 route.use('/fullList', require('./fullList'));
 
 

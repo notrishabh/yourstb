@@ -21,20 +21,20 @@ app.use( express.static( "public" ) );
 
 //============Database Connection==============
 //PRODUCTION
-db = mysql.createConnection({
-    host : process.env.DB_HOST,
-    user : process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database : process.env.DB_DB
-});
+// db = mysql.createConnection({
+//     host : process.env.DB_HOST,
+//     user : process.env.DB_USER,
+//     password : process.env.DB_PASS,
+//     database : process.env.DB_DB
+// });
 
 //TESTING
-// db = mysql.createConnection({
-//     host : 'localhost',
-//     user : 'root',
-//     password : '',
-//     database : 'ccn'
-// });
+db = mysql.createConnection({
+    host : 'localhost',
+    user : 'root',
+    password : '',
+    database : 'ccn'
+});
 
 db.connect((err)=>{
     if(!err){
