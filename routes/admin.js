@@ -112,6 +112,7 @@ route.use('/complaints', require('./complaints'));
 route.use('/offlinePayments', require('./offlinePayments'));
 route.use('/offlineComplaints', require('./offlineComplaints'));
 route.use('/fullList', require('./fullList'));
+route.use('/worker', require('./worker'));
 
 
 module.exports = route;
