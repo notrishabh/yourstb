@@ -43,8 +43,33 @@
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <% include ../partials/messages %>
+                <p class="lead" style="color: red;"><%=success%></p>
+
 
                 <h1 class="h4 mb-4 text-gray-800">Complaints Reported by Customers</h1>
+
+
+                <div class="container-fluid mb-4" id="workerForm" style="display: none;">
+                  <div class="card shadow">
+                      <h5 class="card-header">Fixed By</h5>
+                      <div class="card-body">
+    
+                        <form action="/adminPanel/complaints/pending/workerFixed" method="POST">
+                          <input type="hidden" name="id" id="id">
+                          <div class="form-group">
+                            <label for="worker">Worker Name</label>
+                            <select class="form-control" id="worker" name="workerName">
+                              <% for(var i=0; i< workerList.length; i++){%>
+                                <option><%=workerList[i].Name%></option>
+                              <%}%>
+                            </select>
+                          </div>
+                            <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Save</button>
+                        </form>
+                          </div>    
+                      </div>
+              </div>
 
                           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -56,7 +81,6 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>#</th>
                       <th>ID</th>
                       <th>Name</th>
                       <th>Address</th>
@@ -66,11 +90,11 @@
                       <th>Error No.</th>
                       <th>Message</th>
                       <th>Date & Time</th>
+                      <th>#</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>#</th>
                       <th>ID</th>
                       <th>Name</th>
                       <th>Address</th>
@@ -80,6 +104,7 @@
                       <th>Error No.</th>
                       <th>Message</th>
                       <th>Date & Time</th>
+                      <th>#</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -89,15 +114,6 @@
                         %>
 
                         <tr>
-                          <td>
-                            <form action="/adminPanel/complaints/pending" method="POST">
-                              <div>
-                                <input type="hidden" name="id" value="<%= results[i].id %>">
-                                <input type="checkbox" name="checkbox" onChange="this.form.submit()"/>&nbsp;
-                                <label for="checkbox"></label>
-                              </div>
-                            </form>
-                          </td>
                           <td><%= i+1 %></td>
                           <td><%= results[i].Name %></td>
                           <td><%= results[i].Address %></td>
@@ -107,6 +123,12 @@
                           <td><%= results[i].Error %></td>
                           <td><%= results[i].Msg %></td>
                           <td><%= date[0] %></td>
+                          <td>
+                            <button class="btn btn-primary" 
+                            onclick="document.getElementById('workerForm').style.display = 'block'; 
+                            document.getElementById('id').value = '<%=results[i].id%>'"
+                            ><i class="fas fa-check-circle"></i></button>
+                          </td>
                         </tr>
 
                     <% } 
