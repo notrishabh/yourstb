@@ -24,7 +24,7 @@ module.exports = function(passport){
     passport.use('customer-local',
     new LocalStrategy({usernameField : 'stbNumber', passwordField: 'stbNumber',}, (stbNumber,password, done) => {
         //Match stbnumber
-        let sql = `SELECT * FROM all_info WHERE Stb = "${stbNumber}" LIMIT 1`;   //Matching Criteria
+        let sql = `SELECT * FROM infos WHERE Stb = "${stbNumber}" LIMIT 1`;   //Matching Criteria
         db.query(sql, (err, results)=>{
             if(results.length == 0){
                 return done(null, false, {message : "No STB found."});
@@ -49,7 +49,7 @@ passport.deserializeUser((id, done)=> {
             done(null, result[0]);
         });
     }else{
-        db.query(`SELECT * FROM all_info WHERE Stb = "${id}"`, (err, result)=>{
+        db.query(`SELECT * FROM infos WHERE Stb = "${id}"`, (err, result)=>{
             done(null, result[0]);
         });
     }

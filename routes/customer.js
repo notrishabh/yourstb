@@ -12,7 +12,7 @@ route.get('/', ensureAuthenticated, (req,res)=>{
     var months = ["August","September","October"];
     var monthData = months.join();
          
-       let sql = `SELECT ${monthData} FROM all_info WHERE Stb = "${req.user.Stb}"`;
+       let sql = `SELECT ${monthData} FROM infos WHERE Stb = "${req.user.Stb}"`;
        db.query(sql, (err,results)=>{
            res.render('customerPanel', {
             data : req.user,
@@ -36,7 +36,7 @@ route.post('/sendComplaint', (req,res)=>{
    var error = req.body.error;
    var msg = req.body.msg;
 
-   db.query(`SELECT * FROM all_info WHERE Stb = "${stb}"`, (err,result)=>{
+   db.query(`SELECT * FROM infos WHERE Stb = "${stb}"`, (err,result)=>{
     let sql = 'INSERT INTO complaint SET ?'
     var values = {
         Name : result[0].Name,
@@ -81,8 +81,8 @@ route.post('/txn/payment', function(req, res){
             params['ORDER_ID']			    = 'TEST_'  + new Date().getTime();
             params['CUST_ID'] 			    = 'Customer001';
             params['TXN_AMOUNT']		    = Amount;
-            // params['CALLBACK_URL']		    = 'http://localhost:'+port+'/customerPanel/callback?stb='+Stb;
-            params['CALLBACK_URL']		    = 'https://yourstb.herokuapp.com/customerPanel/callback?stb='+Stb;
+            params['CALLBACK_URL']		    = 'http://localhost:'+port+'/customerPanel/callback?stb='+Stb;
+            // params['CALLBACK_URL']		    = 'https://yourstb.herokuapp.com/customerPanel/callback?stb='+Stb;
             params['EMAIL']				    = 'abc@mailinator.com';
             params['MOBILE_NO']			    = Mobile;
 
@@ -105,7 +105,7 @@ route.post('/txn/payment', function(req, res){
     }	
     });
         route.post('/callback', function(req, res){ //ADD QUERY FOR INSERTING IN all_info with respective month in production
-            let sql = `SELECT * FROM all_info WHERE Stb = "${req.query.stb}"`
+            let sql = `SELECT * FROM infos WHERE Stb = "${req.query.stb}"`
             db.query(sql, function(error, results, fields) {
                 var pay = 'INSERT INTO payment SET ?';
                 var values = {
@@ -139,7 +139,7 @@ route.post('/txn/payment', function(req, res){
                 month[11] = "December";
               
                 var monthName = month[d.getMonth()];
-                let listPay = `UPDATE all_info SET ${monthName}="${req.body.TXNAMOUNT}" WHERE Stb = "${results[0].Stb}"`;
+                let listPay = `UPDATE infos SET ${monthName}="${req.body.TXNAMOUNT}" WHERE Stb = "${results[0].Stb}"`;
                 db.query(listPay, (err,results)=>{
                 });
             });

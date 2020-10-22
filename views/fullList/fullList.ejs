@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Full List (<%=results[0].region_name%>)</title>
+    <title>Full List</title>
 
     
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,7 +36,7 @@
 
             <!-- Main Content -->
             <div id="content">
-              <%- include('../partials/topbar', {heading: `Full List (${results[0].region_name})`}); %>
+              <%- include('../partials/topbar', {heading: `Full List`}); %>
 
               <!-- End of Topbar -->
       
@@ -46,45 +46,33 @@
                 <div class="container-fluid">
                   <div class="row align-items-center">
                     <div class="col-md-4">
-                      <div class="row align-items-center">
-                        <a href="/adminPanel/fullList" class="btn btn-primary mb-3 p-2"><i class="fas fa-arrow-circle-left"></i> Go Back</a>
-                      </div>
-                    </div>
-                    <div class="col-md-4 offset-md-4">
-                      <div class="row align-items-center">
-                        <p class="lead mb-4 text-gray-800 mr-3">Payment records for this month</p>
-                        <a href="/adminPanel/fullList/<%=region_id%>/download" class="btn btn-primary mb-3 p-2">Download <i class="fas fa-arrow-circle-down"></i></a>
-    
-                      </div>
+                      <h1 class="h4 mb-4 text-gray-800"><i class="fas fa-chevron-right"></i> Please select a Region </h1>
                     </div>
                   </div>
                 </div>
 
 
-                          <!-- DataTales Example -->
+          <!-- DataTales Example -->
           <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Table View</h6>
-            </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
+                      <th>ID</th>
+                      <th>Region Name</th>
+                      <th>Total Connections</th>
+                      <th>View</th>
+                      <th>Download</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
+                      <th>ID</th>
+                      <th>Region Name</th>
+                      <th>Total Connections</th>
+                      <th>View</th>
+                      <th>Download</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -93,11 +81,15 @@
                         %>
 
                         <tr>
-                          <td><%= results[i].Name %></td>
-                          <td><%= results[i].Address %></td>
-                          <td><%= results[i].Mobile %></td>
-                          <td><%= results[i].Stb %></td>
-                          <td><%= results[i].Amount %></td>
+                          <td><%= results[i].id %></td>
+                          <td><%= results[i].region_name %></td>
+                          <td><%= results[i].totalConnections %></td>
+                          <td>
+                            <a href="/adminPanel/fullList/<%=results[i].id%>" class="btn btn-primary"><i class="fas fa-book-open"></i></a>
+                          </td>
+                          <td>
+                            <a href="/adminPanel/fullList/<%=results[i].id%>/download" class="btn btn-primary"><i class="fas fa-arrow-circle-down"></i></a>
+                          </td>
                         </tr>
 
                     <% } 

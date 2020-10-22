@@ -5,14 +5,45 @@ const {ensureAuthenticateds} = require('../config/adminAuth');    //Login Authen
 const Excel = require('exceljs');
 
 
-route.get('/:region',ensureAuthenticateds, (req,res)=>{
-    var region = req.params.region;
-    let sql = `SELECT Name, Address, Mobile, Stb, October AS Amount FROM all_info WHERE Address LIKE "${region}%"`;
+route.get("/",ensureAuthenticateds,(req,res)=>{
+    let sql = `SELECT COUNT(infos.Stb) AS totalConnections, region.id, region.region_name FROM infos INNER JOIN region ON infos.region_id = region.id GROUP BY infos.region_id`;
+
+    db.query(sql,(err,results)=>{
+        res.render('fullList/fullList', {
+            user : req.user,
+            results : results
+        });
+    });
+
+});
+
+
+route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
+    var region_id = req.params.region_id;
+    console.log(region_id);
+    var d = new Date();
+    var month = new Array();
+    month[0] = "January";
+    month[1] = "February";
+    month[2] = "March";
+    month[3] = "April";
+    month[4] = "May";
+    month[5] = "June";
+    month[6] = "July";
+    month[7] = "August";
+    month[8] = "September";
+    month[9] = "October";
+    month[10] = "November";
+    month[11] = "December";
+  
+    var monthName = month[d.getMonth()];
+    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id}`;
     db.query(sql, (err,results)=>{
         res.render('fullList/allRegions', {
             user : req.user,
             results : results,
-            region : region
+            region_id : region_id
         });
     });
 });
@@ -31,7 +62,7 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
         { header: 'Mobile', key: 'Mobile', width: 15 },
         { header: 'Amount', key: 'Amount', width: 10 },
     ];
-    let sql = `SELECT Name, Address, Mobile, Stb, October AS Amount FROM all_info WHERE Address LIKE "${region}%"`;
+    let sql = `SELECT Name, Address, Mobile, Stb, October AS Amount FROM infos WHERE region_id = "${region}"`;
     db.query(sql, (err,results)=>{
         results.forEach((result)=>{
             var data = JSON.parse(JSON.stringify(result));
@@ -44,16 +75,17 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
 
 async function sendWorkbook(workbook, response, region) { 
 
-    // var fileName = 'newboi.xlsx';
-
-    var fileName = `${region}.xlsx`
-
-    response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
-
-     await workbook.xlsx.write(response);
-
-    response.end();
+    let sql = `SELECT region_name FROM region WHERE id = ${region}`;
+    db.query(sql,async(err,results)=>{
+        var regionName = results[0].region_name;
+        var fileName = `${regionName}.xlsx`;
+        response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+    
+         await workbook.xlsx.write(response);
+    
+        response.end();
+    });
 }
 
 
