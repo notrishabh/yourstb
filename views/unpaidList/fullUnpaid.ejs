@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Payments (This Month)</title>
+    <title>Full Unpaid List</title>
 
     
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,12 +24,12 @@
         <!-- Sidebar -->
           <%- include('../partials/sidebar', {
             dashboard : '',
-            payments : 'active',
+            payments : '',
             complaints : '',
             worker : '',
             offlinePayments : '',
             offlineComplaints : '',
-            unpaidList : '',
+            unpaidList : 'active',
             fullList : ''
           }); %>
 
@@ -37,69 +37,66 @@
 
             <!-- Main Content -->
             <div id="content">
-      
-              <%- include('../partials/topbar', {heading: 'Payments (This Month)'}); %>
+              <%- include('../partials/topbar', {heading: `Full Unpaid List`}); %>
 
               <!-- End of Topbar -->
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
 
-                <h1 class="h4 mb-4 text-gray-800">Payments Recieved in <%= month %></h1>
+                <div class="container-fluid">
+                  <div class="row align-items-center">
+                    <div class="col-md-4">
+                      <h1 class="h4 mb-4 text-gray-800"><i class="fas fa-chevron-right"></i> Please select a Region </h1>
+                    </div>
+                  </div>
+                </div>
 
-                          <!-- DataTales Example -->
+
+          <!-- DataTales Example -->
           <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Table View</h6>
-            </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Txn_ID</th>
-                      <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Date & Time</th>
+                      <th>Region Name</th>
+                      <th>Total Unpaid Connections</th>
+                      <th>View</th>
+                      <th>Download</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>ID</th>
-                      <th>Txn_ID</th>
-                      <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Date & Time</th>
+                      <th>Region Name</th>
+                      <th>Total Unpaid Connections</th>
+                      <th>View</th>
+                      <th>Download</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
-                        var date = results[i].dateTime.toString().split("GMT");
                         %>
 
                         <tr>
                           <td><%= results[i].id %></td>
-                          <td><%= results[i].Txn_ID %></td>
-                          <td><%= results[i].Name %></td>
-                          <td><%= results[i].Address %></td>
-                          <td><%= results[i].Mobile %></td>
-                          <td><%= results[i].Stb %></td>
-                          <td><%= results[i].Amount %></td>
-                          <td><%= date[0] %></td>
+                          <td><%= results[i].region_name %></td>
+                          <td><%= results[i].unpaidConnections %></td>
+                          <td>
+                            <a href="/adminPanel/unpaidList/<%=results[i].id%>" class="btn btn-primary"><i class="fas fa-book-open"></i></a>
+                          </td>
+                          <td>
+                            <a href="/adminPanel/unpaidList/<%=results[i].id%>/download" class="btn btn-primary"><i class="fas fa-arrow-circle-down"></i></a>
+                          </td>
                         </tr>
 
                     <% } 
                   }else{ %>
                     <tr>
-                      <td colspan="3">No payment recieved in <%= month %> </td>
+                      <td colspan="3">No customers found</td>
                     </tr>
                   <% } %>
                     

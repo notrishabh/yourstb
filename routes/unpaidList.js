@@ -6,10 +6,29 @@ const Excel = require('exceljs');
 
 
 route.get("/",ensureAuthenticateds,(req,res)=>{
-    let sql = `SELECT COUNT(infos.Stb) AS totalConnections, region.id, region.region_name FROM infos INNER JOIN region ON infos.region_id = region.id GROUP BY infos.region_id`;
+    var d = new Date();
+    var month = new Array();
+    month[0] = "January";
+    month[1] = "February";
+    month[2] = "March";
+    month[3] = "April";
+    month[4] = "May";
+    month[5] = "June";
+    month[6] = "July";
+    month[7] = "August";
+    month[8] = "September";
+    month[9] = "October";
+    month[10] = "November";
+    month[11] = "December";
+  
+    var monthName = month[d.getMonth()];
+
+    let sql =   `SELECT COUNT(infos.Stb) AS unpaidConnections, region.id, region.region_name 
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND ${monthName} = 0
+                GROUP BY infos.region_id`;
 
     db.query(sql,(err,results)=>{
-        res.render('fullList/fullList', {
+        res.render('unpaidList/fullUnpaid', {
             user : req.user,
             results : results
         });
@@ -37,9 +56,9 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
   
     var monthName = month[d.getMonth()];
     let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id}`;
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND ${monthName} = 0`;
     db.query(sql, (err,results)=>{
-        res.render('fullList/allRegions', {
+        res.render('unpaidList/allRegions', {
             user : req.user,
             results : results,
             region_id : region_id
@@ -66,10 +85,9 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
     month[11] = "December";
   
     var monthName = month[d.getMonth()];
-
-
+    
     const workbook = new Excel.Workbook();
-    const worksheet = workbook.addWorksheet('records');
+    const worksheet = workbook.addWorksheet('Unpaid Records');
     worksheet.views = [
         {state: 'frozen', ySplit: 1, activeCell: 'A1'}
     ];
@@ -80,7 +98,7 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
         { header: 'Mobile', key: 'Mobile', width: 15 },
         { header: 'Amount', key: 'Amount', width: 10 },
     ];
-    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}"`;
+    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}" AND ${monthName} = 0`;
     db.query(sql, (err,results)=>{
         results.forEach((result)=>{
             var data = JSON.parse(JSON.stringify(result));
@@ -96,7 +114,7 @@ async function sendWorkbook(workbook, response, region) {
     let sql = `SELECT region_name FROM region WHERE id = ${region}`;
     db.query(sql,async(err,results)=>{
         var regionName = results[0].region_name;
-        var fileName = `${regionName}.xlsx`;
+        var fileName = `Unpaid ${regionName}.xlsx`;
         response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
     

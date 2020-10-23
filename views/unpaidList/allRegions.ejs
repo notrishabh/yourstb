@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Payments (This Month)</title>
+    <title>Unpaid List (<%=results[0].region_name%>)</title>
 
     
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,12 +24,12 @@
         <!-- Sidebar -->
           <%- include('../partials/sidebar', {
             dashboard : '',
-            payments : 'active',
+            payments : '',
             complaints : '',
             worker : '',
             offlinePayments : '',
             offlineComplaints : '',
-            unpaidList : '',
+            unpaidList : 'active',
             fullList : ''
           }); %>
 
@@ -37,15 +37,30 @@
 
             <!-- Main Content -->
             <div id="content">
-      
-              <%- include('../partials/topbar', {heading: 'Payments (This Month)'}); %>
+              <%- include('../partials/topbar', {heading: `Unpaid List (${results[0].region_name})`}); %>
 
               <!-- End of Topbar -->
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
 
-                <h1 class="h4 mb-4 text-gray-800">Payments Recieved in <%= month %></h1>
+                <div class="container-fluid">
+                  <div class="row align-items-center">
+                    <div class="col-md-4">
+                      <div class="row align-items-center">
+                        <a href="/adminPanel/unpaidList" class="btn btn-primary mb-3 p-2"><i class="fas fa-arrow-circle-left"></i> Go Back</a>
+                      </div>
+                    </div>
+                    <div class="col-md-4 offset-md-4">
+                      <div class="row align-items-center">
+                        <p class="lead mb-4 text-gray-800 mr-3">Unpaid records for this month</p>
+                        <a href="/adminPanel/unpaidList/<%=region_id%>/download" class="btn btn-primary mb-3 p-2">Download <i class="fas fa-arrow-circle-down"></i></a>
+    
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
                           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -57,49 +72,36 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>Txn_ID</th>
                       <th>Name</th>
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Date & Time</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>ID</th>
-                      <th>Txn_ID</th>
                       <th>Name</th>
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Date & Time</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
-                        var date = results[i].dateTime.toString().split("GMT");
                         %>
 
                         <tr>
-                          <td><%= results[i].id %></td>
-                          <td><%= results[i].Txn_ID %></td>
                           <td><%= results[i].Name %></td>
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
-                          <td><%= results[i].Amount %></td>
-                          <td><%= date[0] %></td>
                         </tr>
 
                     <% } 
                   }else{ %>
                     <tr>
-                      <td colspan="3">No payment recieved in <%= month %> </td>
+                      <td colspan="3">No customers found</td>
                     </tr>
                   <% } %>
                     
