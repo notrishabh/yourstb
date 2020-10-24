@@ -33,7 +33,8 @@ db = mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : '',
-    database : 'ccn'
+    database : 'ccn',
+    multipleStatements : true
 });
 
 db.connect((err)=>{
