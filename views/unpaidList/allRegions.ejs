@@ -31,6 +31,7 @@
             worker : '',
             offlinePayments : '',
             offlineComplaints : '',
+            newStb : '',
             unpaidList : 'active',
             fullList : ''
           }); %>
@@ -133,6 +134,11 @@
 
             <!-- Page level custom scripts -->
             <script src="/scripts/datatables.js"></script>
+            <script>
+              $('#dataTable').dataTable({
+                "ordering" : false
+              });
+            </script>
 
 
  </body>

@@ -4,6 +4,9 @@ const mysql = require("mysql");
 const {ensureAuthenticateds} = require('../config/adminAuth');    //Login Authenticator
 const Excel = require('exceljs');
 
+var success = [];
+
+
 
 route.get("/",ensureAuthenticateds,(req,res)=>{
     let sql = `SELECT COUNT(infos.Stb) AS totalConnections, region.id, region.region_name FROM infos INNER JOIN region ON infos.region_id = region.id GROUP BY infos.region_id`;
@@ -11,10 +14,28 @@ route.get("/",ensureAuthenticateds,(req,res)=>{
     db.query(sql,(err,results)=>{
         res.render('fullList/fullList', {
             user : req.user,
-            results : results
+            results : results,
+            success
+
         });
     });
 
+});
+
+route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
+    var region_id = req.params.region_id;
+    let sql = `UPDATE infos SET ? WHERE Stb = "${req.body.stb}"`;
+    let values = {
+        Name : req.body.name,
+        Address : req.body.address,
+        Mobile : req.body.mobile
+    };
+    db.query(sql, values, (err,results)=>{
+        if(!err){
+            req.flash('success_msg', 'Record Edited Successfully!');
+            res.redirect("/adminPanel/fullList/" + region_id);
+        }
+    });
 });
 
 
@@ -42,7 +63,9 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
         res.render('fullList/allRegions', {
             user : req.user,
             results : results,
-            region_id : region_id
+            region_id : region_id,
+            success
+
         });
     });
 });

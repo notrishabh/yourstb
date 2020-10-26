@@ -30,6 +30,7 @@
           worker : '',
           offlinePayments : '',
           offlineComplaints : '',
+          newStb : '',
           unpaidList : '',
           fullList : ''
         }); %>
@@ -87,7 +88,7 @@
                         %>
 
                         <tr>
-                          <td><%= results[i].id %></td>
+                          <td><%= i+1 %></td>
                           <td><%= results[i].Name %></td>
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>

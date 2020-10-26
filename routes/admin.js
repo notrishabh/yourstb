@@ -98,6 +98,7 @@ route.use('/offlineComplaints', require('./offlineComplaints'));
 route.use('/fullList', require('./fullList'));
 route.use('/unpaidList', require('./unpaidList'));
 route.use('/worker', require('./worker'));
+route.use('/newStb', require('./newStb'));
 
 
 module.exports = route;

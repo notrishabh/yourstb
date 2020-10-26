@@ -31,6 +31,7 @@
             worker : '',
             offlinePayments : '',
             offlineComplaints : '',
+            newStb : '',
             unpaidList : '',
             fullList : 'active'
           }); %>
@@ -45,6 +46,9 @@
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <% include ../partials/messages %>
+                <p class="lead" style="color: red;"><%=success%></p>
+
 
                 <div class="container-fluid">
                   <div class="row align-items-center">
@@ -62,6 +66,30 @@
                     </div>
                   </div>
                 </div>
+                <div class="container-fluid mb-4" id="editForm" style="display: none;">
+                  <div class="card shadow">
+                      <h5 class="card-header">Customer Edit Form</h5>
+                      <div class="card-body">
+    
+                        <form action="/adminPanel/fullList/edit/<%=region_id%>" method="POST">
+                          <input type="hidden" id="stb" name="stb">
+                          <div class="form-group">
+                              <label for="name">Name</label>
+                              <input type="text" class="form-control" id="nameEdit" name="name"  required>
+                          </div>
+                          <div class="form-group">
+                              <label for="address">Address</label>
+                              <input type="text" class="form-control" id="addressEdit" name="address"  required>
+                          </div>
+                          <div class="form-group">
+                              <label for="mobile">Mobile</label>
+                              <input type="text" class="form-control" id="mobileEdit" name="mobile" >
+                          </div>
+                            <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-user-edit"></i> Edit</button>
+                        </form>
+                          </div>    
+                      </div>
+              </div>
 
 
                           <!-- DataTales Example -->
@@ -79,6 +107,7 @@
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
+                      <th>Edit</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -88,6 +117,7 @@
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
+                      <th>Edit</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -101,6 +131,21 @@
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
                           <td><%= results[i].Amount %></td>
+                          <td>
+                           
+                            <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>"; 
+                             document.getElementById("addressEdit").value = "<%=results[i].Address%>"; 
+                             document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
+                             document.getElementById("stb").value = "<%=results[i].Stb%>"; 
+                             var r = confirm("Do you want to continue editing the customer record?");
+                             if(r==true){
+                                 document.getElementById("editForm").style.display="block";
+                             }else{
+                                 document.getElementById("editForm").style.display="none";
+                             }'
+                             class="btn btn-primary" id="editBtn"><i class="fas fa-edit"></i></button>
+                           
+                           </td>
                         </tr>
 
                     <% } 
@@ -136,6 +181,11 @@
 
             <!-- Page level custom scripts -->
             <script src="/scripts/datatables.js"></script>
+            <script>
+              $('#dataTable').dataTable({
+                "ordering" : false
+              });
+            </script>
 
 
  </body>
