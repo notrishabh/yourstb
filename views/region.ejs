@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Payments (This Month)</title>
+    <title>Regions List</title>
     <link rel="icon" href="/icon.png" type="image/x-icon">
 
     
@@ -23,12 +23,12 @@
  <body id="page-top">
    <div id="wrapper">
         <!-- Sidebar -->
-          <%- include('../partials/sidebar', {
+          <%- include('./partials/sidebar', {
             dashboard : '',
-            payments : 'active',
+            payments : '',
             complaints : '',
             worker : '',
-            region : '',
+            region : 'active',
             offlinePayments : '',
             offlineComplaints : '',
             newStb : '',
@@ -41,19 +41,21 @@
             <!-- Main Content -->
             <div id="content">
       
-              <%- include('../partials/topbar', {heading: 'Payments (This Month)'}); %>
+              <%- include('./partials/topbar', {heading: 'Regions List'}); %>
 
               <!-- End of Topbar -->
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <% include ./partials/messages %>
+                <p class="lead" style="color: red;"><%=success%></p>
+    
 
-                <h1 class="h4 mb-4 text-gray-800">Payments Recieved in <%= month %></h1>
-
-                          <!-- DataTales Example -->
-          <div class="card shadow mb-4">
+                
+        <div class="row">
+          <div class="card shadow mb-4 col-6">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Table View</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Regions List</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -62,50 +64,38 @@
                     <tr>
                       <th>ID</th>
                       <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Mode</th>
-                      <th>Payment Date</th>
-                      <th>Expiry Date</th>
+                      <!-- <th>Delete</th> -->
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Address</th>
-                      <th>Mobile</th>
-                      <th>STB No.</th>
-                      <th>Amount</th>
-                      <th>Mode</th>
-                      <th>Payment Date</th>
-                      <th>Expiry Date</th>
-                    </tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <!-- <th>Delete</th> -->
+                      </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
-                        var date = results[i].datePaid.toString().split("GMT");
-                        var dateExpiry = results[i].dateExpiry.toString().split("GMT");
                         %>
 
                         <tr>
-                          <td><%= i+1  %></td>
-                          <td><%= results[i].Name %></td>
-                          <td><%= results[i].Address %></td>
-                          <td><%= results[i].Mobile %></td>
-                          <td><%= results[i].Stb %></td>
-                          <td><%= results[i].Amount %></td>
-                          <td><%= results[i].Mode %></td>
-                          <td><%= date[0] %></td>
-                          <td><%= dateExpiry[0] %></td>
+                          <td><%= i+1 %></td>
+                          <td><%= results[i].region_name %></td>
+                          <!-- <td>
+                            <form action="/adminPanel/region/delete" method="POST">
+                              <div>
+                                <input type="hidden" name="id" value="<%= results[i].id %>">
+                                <button class="btn btn-primary" onclick=confirmBtn() id="delBtn"><i class="fas fa-minus-circle"></i></button>
+                              </div>
+                            </form>
+                          </td> -->
                         </tr>
+
                     <% } 
                   }else{ %>
                     <tr>
-                      <td colspan="3">No payment recieved in <%= month %> </td>
+                      <td colspan="3">No Regions found</td>
                     </tr>
                   <% } %>
                     
@@ -115,11 +105,27 @@
               </div>
             </div>
           </div>
+          <div class="container-fluid mb-4 col-5" id="addForm">
+            <div class="card shadow">
+                <h5 class="card-header">Add New Region</h5>
+                <div class="card-body">
+
+                  <form action="/adminPanel/region/add" method="POST">
+                    <div class="form-group">
+                        <label for="region_name">Region Name</label>
+                        <input type="text" class="form-control" id="region_name" name="region_name" required>
+                    </div>
+                      <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Save</button>
+                  </form>
+                    </div>    
+                </div>
+        </div>
+        </div>
 
       
                 
               </div>
-              <%- include('../partials/footer'); %>
+              <%- include('./partials/footer'); %>
             </div>
             </div>
           </div>
@@ -127,7 +133,7 @@
       
 
 
-          <%- include('../partials/vendor'); %>
+          <%- include('./partials/vendor'); %>
 
             <!-- Page level plugins -->
             <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
@@ -135,6 +141,17 @@
 
             <!-- Page level custom scripts -->
             <script src="/scripts/datatables.js"></script>
+            <script>
+                function confirmBtn(){
+                    var r = confirm("Are you sure you want to remove the region?");
+                    if(r==true){
+                        document.getElementById('delBtn').type = "submit";
+                    }else{
+                        document.getElementById('delBtn').type = "reset";
+                    }
+                }
+            </script>
+
 
 
  </body>

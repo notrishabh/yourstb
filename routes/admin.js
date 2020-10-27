@@ -99,6 +99,7 @@ route.use('/fullList', require('./fullList'));
 route.use('/unpaidList', require('./unpaidList'));
 route.use('/worker', require('./worker'));
 route.use('/newStb', require('./newStb'));
+route.use('/region', require('./region'));
 
 
 module.exports = route;
