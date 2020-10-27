@@ -106,7 +106,9 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
-                      <th>Amount</th>
+                      <th><%=monthName%></th>
+                      <th>Payment Date</th>
+                      <th>Expiry Date</th>
                       <th>Edit</th>
                     </tr>
                   </thead>
@@ -116,13 +118,17 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
-                      <th>Amount</th>
+                      <th><%=monthName%></th>
+                      <th>Payment Date</th>
+                      <th>Expiry Date</th>
                       <th>Edit</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
+                        var date = results[i].datePaid.toString().split("GMT");
+                        var dateExpiry = results[i].dateExpiry.toString().split("GMT");
                         %>
 
                         <tr>
@@ -131,6 +137,8 @@
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
                           <td><%= results[i].Amount %></td>
+                          <td><%= date[0] %></td>
+                          <td><%= dateExpiry[0] %></td>
                           <td>
                            
                             <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>"; 

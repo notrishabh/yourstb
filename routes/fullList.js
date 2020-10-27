@@ -57,13 +57,14 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
     month[11] = "December";
   
     var monthName = month[d.getMonth()];
-    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
+    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
                 FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id}`;
     db.query(sql, (err,results)=>{
         res.render('fullList/allRegions', {
             user : req.user,
             results : results,
             region_id : region_id,
+            monthName : monthName,
             success
 
         });

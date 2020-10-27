@@ -24,26 +24,26 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 
     today = yyyy + '-' + mm + '-' + dd;
 
-    let sql = `SELECT SUM(Amount) AS total FROM payment WHERE MONTH(dateTime) = "${mm}"`; //MONTHLY CARD
+    let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE MONTH(datePaid) = "${mm}"`; //MONTHLY CARD
     db.query(sql,(err,results)=>{
         monthlyEarnings = results[0].total;
-        let sql = `SELECT SUM(Amount) AS total FROM payment WHERE YEAR(dateTime) = "${yyyy}"`; //YEARLY CARD
+        let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE YEAR(datePaid) = "${yyyy}"`; //YEARLY CARD
         db.query(sql, (err,results)=>{
             yearlyEarnings = results[0].total;
-            let sql = `SELECT * FROM payment ORDER BY id DESC LIMIT 1`; //LATEST PAYMENT CARD
+            let sql = `SELECT * FROM all_payment ORDER BY id DESC LIMIT 1`; //LATEST PAYMENT CARD
             db.query(sql, (err,results)=>{
                 latestName = results[0].Name;
                 latestAmount = results[0].Amount;
                 let sql = `SELECT COUNT(id) AS total FROM complaint WHERE Checkbox = 0`; //LATEST COMPLAINT CARD
                 db.query(sql, (err, results)=>{
                     totalComplaints = results[0].total;
-                    let sql = `SELECT SUM(Amount) AS sum,month(dateTime) AS month FROM payment GROUP BY month(dateTime)`; //EARNING CHART
+                    let sql = `SELECT SUM(Amount) AS sum,month(datePaid) AS month FROM all_payment GROUP BY month(datePaid)`; //EARNING CHART
                     db.query(sql, (err,results)=>{
                         sum = results;
-                        let sql = `SELECT COUNT(id) AS onlineCount FROM payment`; //PIE CHART
+                        let sql = `SELECT COUNT(id) AS onlineCount FROM all_payment WHERE Mode="Online"`; //PIE CHART
                         db.query(sql, (err,results)=>{
                             onlineCount = results[0].onlineCount;
-                            let sql = `SELECT COUNT(id) AS offlineCount FROM offline_payment`;  //PIE CHART
+                            let sql = `SELECT COUNT(id) AS offlineCount FROM all_payment WHERE Mode="Offline"`;  //PIE CHART
                             db.query(sql,(err,results)=>{
                                 offlineCount = results[0].offlineCount;
                                 res.render('adminPanel', {

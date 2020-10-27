@@ -60,41 +60,41 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Txn_ID</th>
                       <th>Name</th>
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
-                      <th>Date & Time</th>
+                      <th>Mode</th>
+                      <th>Payment Date</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>ID</th>
-                      <th>Txn_ID</th>
                       <th>Name</th>
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
                       <th>Amount</th>
-                      <th>Date & Time</th>
+                      <th>Mode</th>
+                      <th>Payment Date</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
-                        var date = results[i].dateTime.toString().split("GMT");
+                        var date = results[i].datePaid.toString().split("GMT");
                         %>
 
                         <tr>
-                          <td><%= results[i].id %></td>
-                          <td><%= results[i].Txn_ID %></td>
+                          <td><%= results[i].id  %></td>
                           <td><%= results[i].Name %></td>
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
                           <td><%= results[i].Amount %></td>
+                          <td><%= results[i].Mode %></td>
                           <td><%= date[0] %></td>
                         </tr>
 

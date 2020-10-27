@@ -4,20 +4,6 @@ const mysql = require("mysql");
 const { ensureAuthenticateds } = require("../config/adminAuth"); //Login Authenticator
 
 
-// route.get("/x", (req,res)=>{
-//   var today = new Date();
-//   var dd = String(today.getDate());
-//   var mm = String(today.getMonth() + 1);
-//   var yyyy = String(today.getFullYear());
-
-//   today = yyyy + "-" + mm + "-" + dd;
-//   let todaySQL = `SELECT * FROM payment WHERE DATE_FORMAT(dateTime, "%Y-%m-%d" ) = "${today}"`;
-//   let monthSQL = `SELECT Name FROM payment WHERE month(dateTime) = "${mm}"`;
-//   let sql = `SELECT Name FROM payment WHERE year(dateTime) = "${yyyy}"`;
-//   db.query(todaySQL, (err,results)=>{
-//     console.log(results);
-//   });
-// });
 
 route.get("/today", ensureAuthenticateds, (req, res) => {
   var today = new Date();
@@ -27,13 +13,19 @@ route.get("/today", ensureAuthenticateds, (req, res) => {
 
   today = yyyy + "-" + mm + "-" + dd;
 
-  let sql = `SELECT * FROM payment WHERE DATE_FORMAT(dateTime, "%Y-%m-%d" ) = "${today}" ORDER BY id DESC`;
+  let sql = `SELECT * FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" ORDER BY id DESC`;
   db.query(sql, (err, results) => {
-    res.render("payments/today", {
+    let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}"`;
+    db.query(sql, (err,rus)=>{
+      var totalToday = rus[0].total;
+      res.render("payments/today", {
       user: req.user,
       results: results,
       today: today,
+      sum : totalToday
     });
+    });
+
   });
 });
 
@@ -56,7 +48,7 @@ route.get("/thisMonth", ensureAuthenticateds, (req, res) => {
   var monthNumber = d.getMonth() + 1;
   var monthName = month[d.getMonth()];
 
-  let sql = `SELECT * FROM payment WHERE month(dateTime) = "${monthNumber}" ORDER BY id DESC`;
+  let sql = `SELECT * FROM all_payment WHERE month(datePaid) = "${monthNumber}" ORDER BY id DESC`;
   db.query(sql, (err, results) => {
     res.render("payments/thisMonth", {
       user: req.user,
@@ -70,7 +62,7 @@ route.get('/thisYear', ensureAuthenticateds, (req,res)=>{
     var d = new Date();
     var year = d.getFullYear();
 
-    let sql = `SELECT * FROM payment WHERE year(dateTime) = "${year}" ORDER BY id DESC`;
+    let sql = `SELECT * FROM all_payment WHERE year(datePaid) = "${year}" ORDER BY id DESC`;
     db.query(sql, (err,results)=>{
         res.render('payments/thisYear', {
             user : req.user,

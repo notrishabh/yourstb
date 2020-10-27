@@ -24,7 +24,7 @@ route.get("/",ensureAuthenticateds,(req,res)=>{
     var monthName = month[d.getMonth()];
 
     let sql =   `SELECT COUNT(infos.Stb) AS unpaidConnections, region.id, region.region_name 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND ${monthName} = 0
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND ${monthName} = 0 OR dateExpiry < "${d}"
                 GROUP BY infos.region_id`;
 
     db.query(sql,(err,results)=>{
@@ -123,6 +123,7 @@ async function sendWorkbook(workbook, response, region) {
         response.end();
     });
 }
+
 
 
 

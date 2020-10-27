@@ -81,9 +81,30 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     month[11] = "December";
               
     var monthName = month[d.getMonth()];
-    let listPay = `UPDATE infos SET ${monthName}="${amount}" WHERE Stb = "${results[0].Stb}"`;
-    db.query(listPay, (err,results)=>{
+    var dateExpiry = new Date();
+    dateExpiry.setDate(dateExpiry.getDate() + 30);
+
+    let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
+    let listValues = {
+        dateExpiry : dateExpiry
+    };
+    db.query(listPay, listValues, (err,results)=>{
     });
+
+    let all_payment = `INSERT INTO all_payment SET ?`;
+    let all_values = {
+        Name : results[0].Name,
+        Address : results[0].Address,
+        Mobile : results[0].Mobile,
+        Stb : results[0].Stb,
+        Amount : amount,
+        Mode : 'Offline',
+        dateExpiry : dateExpiry
+    };
+    db.query(all_payment, all_values, (err,results)=>{
+    });
+
+
   });
 
 });
