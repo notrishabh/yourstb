@@ -19,6 +19,12 @@
 
     <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <script>
+      function fields(){
+        document.getElementById('customField').disabled = false;
+      }
+    </script>
+
 </head>
  
  <body id="page-top">
@@ -46,6 +52,8 @@
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <% include ../partials/messages %>
+                <p class="lead" style="color: red;"><%=success%></p>
 
                 <div class="container-fluid">
                   <div class="row align-items-center">
@@ -64,6 +72,49 @@
                   </div>
                 </div>
 
+                <div class="container-fluid mb-4" id="payForm" style="display: none;">
+                  <div class="card shadow">
+                      <h5 class="card-header">Payment Entry Form</h5>
+                      <div class="card-body">
+    
+                        <form action="/adminPanel/unpaidList/<%=region_id%>/pay" method="POST">
+                          <input type="hidden" name='Stb' id='Stb'>
+                          <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="153" required>
+                            <label class="form-check-label" for="exampleRadios1">
+                              Basic Pack <i class="fas fa-rupee-sign"></i> 153
+                            </label>
+                          </div>
+                          <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="275">
+                            <label class="form-check-label" for="exampleRadios2">
+                              Silver Pack <i class="fas fa-rupee-sign"></i> 275
+                            </label>
+                          </div>
+                          <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="360">
+                            <label class="form-check-label" for="exampleRadios3">
+                              Gold Pack <i class="fas fa-rupee-sign"></i> 360
+                            </label>
+                          </div>
+                          <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="454">
+                            <label class="form-check-label" for="exampleRadios4">
+                              Diamond Pack <i class="fas fa-rupee-sign"></i> 454
+                            </label>
+                          </div>
+                            <div class="form-check mb-3">
+                              <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
+                              <label class="form-check-label" for="customRadio" >Custom Amount</label>
+                              <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required />
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
+                          </div>
+                        </form>  
+                          </div>    
+                      </div>
+                </div>
+
 
                           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -79,6 +130,7 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
+                      <th>Pay</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -87,6 +139,7 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
+                      <th>Pay</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -99,6 +152,12 @@
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
+                          <td>
+                            <button class="btn btn-primary" 
+                            onclick="document.getElementById('payForm').style.display = 'block'; 
+                            document.getElementById('Stb').value = '<%=results[i].Stb%>'"
+                            ><i class="fas fa-money-bill-wave"></i></button>
+                          </td>
                         </tr>
 
                     <% } 
