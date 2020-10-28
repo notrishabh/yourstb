@@ -17,11 +17,19 @@ route.get('/', (req,res)=>{
 //===========PASSPORT LOGIN SYSTEM=========
 
 route.post('/', (req,res, next)=>{
-    passport.authenticate('admin-local', {
-        successRedirect: '/adminPanel',
-        failureRedirect: '/adminLogin',
-        failureFlash: true
-    })(req,res,next);
+    if(req.body.workerCheck){
+        passport.authenticate('worker-local', {
+            successRedirect: '/adminPanel',
+            failureRedirect: '/adminLogin',
+            failureFlash: true
+        })(req,res,next);
+    }else{
+        passport.authenticate('admin-local', {
+            successRedirect: '/adminPanel',
+            failureRedirect: '/adminLogin',
+            failureFlash: true
+        })(req,res,next);
+    }
 });
 
 //==========================================
