@@ -66,6 +66,10 @@
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
                             <div class="form-group">
+                              <label for="name">Password</label>
+                              <input type="text" class="form-control" id="password" name="password"  required>
+                            </div>
+                            <div class="form-group">
                                 <label for="region">Region</label>
                                 <input type="text" class="form-control" id="region" name="region" required>
                             </div>
@@ -88,6 +92,10 @@
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" class="form-control" id="nameEdit" name="name"  required>
+                            </div>
+                            <div class="form-group">
+                              <label for="name">Password</label>
+                              <input type="text" class="form-control" id="passwordEdit" name="password"  required>
                             </div>
                             <div class="form-group">
                                 <label for="region">Region</label>
@@ -117,6 +125,7 @@
                       <th>Mobile</th>
                       <th>Region</th>
                       <th>Complaints Fixed</th>
+                      <th>Password</th>
                       <th>Edit</th>
                       <th>Delete</th>
                     </tr>
@@ -128,6 +137,7 @@
                         <th>Mobile</th>
                         <th>Region</th>
                         <th>Complaints Fixed</th>
+                        <th>Password</th>
                         <th>Edit</th>
                         <th>Delete</th>  
                       </tr>
@@ -143,9 +153,11 @@
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Region %></td>
                           <td><%= results[i].fixedComplaints %></td>
+                          <td><%= results[i].password %></td>
                           <td>
                            
-                           <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>"; 
+                           <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>";
+                            document.getElementById("passwordEdit").value = "<%=results[i].password%>"; 
                             document.getElementById("regionEdit").value = "<%=results[i].Region%>"; 
                             document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
                             document.getElementById("id").value = "<%=results[i].id%>"; 

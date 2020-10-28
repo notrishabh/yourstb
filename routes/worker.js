@@ -22,6 +22,7 @@ route.post('/add',ensureAuthenticateds,(req,res)=>{
       let sql = `INSERT INTO worker SET ?`;
       let values = {
         Name : req.body.name,
+        password : req.body.password,
         Region : req.body.region,
         Mobile : req.body.mobile,
       };
@@ -50,6 +51,7 @@ route.post('/edit',ensureAuthenticateds,(req,res)=>{
     let sql = `UPDATE worker SET ? WHERE id=${req.body.id}`;
     let values = {
         Name : req.body.name,
+        password : req.body.password,
         Mobile : req.body.mobile,
         Region : req.body.region,
         fixedComplaints : 0
