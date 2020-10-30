@@ -19,7 +19,7 @@ route.get('/', (req,res)=>{
 route.post('/', (req,res, next)=>{
     if(req.body.workerCheck){
         passport.authenticate('worker-local', {
-            successRedirect: '/adminPanel',
+            successRedirect: '/workerPanel',
             failureRedirect: '/adminLogin',
             failureFlash: true
         })(req,res,next);

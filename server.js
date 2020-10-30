@@ -82,6 +82,7 @@ PaytmConfig = {
 
 
 app.use('/adminPanel', require('./routes/admin'));
+app.use('/workerPanel', require('./routes/workerPanel'));
 app.use('/payments', require('./routes/payments'));
 app.use('/customerPanel', require('./routes/customer'));
 app.use('/adminLogin', require('./routes/adminLogin'));
