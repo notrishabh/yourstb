@@ -3,6 +3,8 @@ const route = express.Router();
 const mysql = require("mysql");
 const {ensureAuthenticateds} = require('../config/adminAuth');    //Login Authenticator
 
+var success = [];
+
 
 
 route.get('/', ensureAuthenticateds, (req,res)=>{
@@ -77,8 +79,28 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 });
 
 
+route.get('/settings', ensureAuthenticateds,(req,res)=>{
+    res.render('settings', {
+        user : req.user,
+        success
+
+    });
+});
 
 
+
+route.post('/settings', ensureAuthenticateds, (req,res)=>{
+    let sql = `UPDATE admin_login SET ? WHERE admin_id = 1`;
+    let values = {
+        password : req.body.newPass
+    };
+    db.query(sql, values, (err, results)=>{
+        if(!err){
+            req.flash('success_msg', 'Password Changed Successfully!');
+            res.redirect('/adminPanel/settings');
+        }
+    });
+});
 
 
 
