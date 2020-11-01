@@ -2,6 +2,8 @@ const express = require('express');
 const route = express.Router();
 const mysql = require("mysql");
 const { ensureAuthenticateds } = require("../config/adminAuth"); //Login Authenticator
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 var success = [];
 
@@ -19,19 +21,25 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 
 route.post('/add',ensureAuthenticateds,(req,res)=>{
 
-      let sql = `INSERT INTO worker SET ?`;
-      let values = {
-        Name : req.body.name,
-        password : req.body.password,
-        Region : req.body.region,
-        Mobile : req.body.mobile,
-      };
-      db.query(sql, values, (err,results)=>{
-        if(!err){
-          req.flash('success_msg', 'Saved Successfully!');
-          res.redirect('/adminPanel/worker');
-        }
-      });
+  var password = req.body.password;
+
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    let sql = `INSERT INTO worker SET ?`;
+    let values = {
+      Name : req.body.name,
+      password : hash,
+      Region : req.body.region,
+      Mobile : req.body.mobile,
+    };
+    db.query(sql, values, (err,results)=>{
+      if(!err){
+        req.flash('success_msg', 'Saved Successfully!');
+        res.redirect('/adminPanel/worker');
+      }
+    });
+  });
+
+
   
   });
 
@@ -48,10 +56,14 @@ route.post('/delete',ensureAuthenticateds,(req,res)=>{
 });
 
 route.post('/edit',ensureAuthenticateds,(req,res)=>{
+
+  var password = req.body.password;
+
+  bcrypt.hash(password, saltRounds, function(err, hash) {
     let sql = `UPDATE worker SET ? WHERE id=${req.body.id}`;
     let values = {
         Name : req.body.name,
-        password : req.body.password,
+        password : hash,
         Mobile : req.body.mobile,
         Region : req.body.region,
         fixedComplaints : 0
@@ -62,6 +74,8 @@ route.post('/edit',ensureAuthenticateds,(req,res)=>{
         res.redirect('/adminPanel/worker');
       }
     });
+  });
+
 
 });
 

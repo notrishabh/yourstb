@@ -2,6 +2,8 @@ const express = require('express');
 const route = express.Router();
 const mysql = require("mysql");
 const {ensureAuthenticateds} = require('../config/adminAuth');    //Login Authenticator
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 var success = [];
 
@@ -90,16 +92,23 @@ route.get('/settings', ensureAuthenticateds,(req,res)=>{
 
 
 route.post('/settings', ensureAuthenticateds, (req,res)=>{
-    let sql = `UPDATE admin_login SET ? WHERE admin_id = 1`;
-    let values = {
-        password : req.body.newPass
-    };
-    db.query(sql, values, (err, results)=>{
-        if(!err){
-            req.flash('success_msg', 'Password Changed Successfully!');
-            res.redirect('/adminPanel/settings');
-        }
+    var password = req.body.newPass;
+
+
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        let sql = `UPDATE admin_login SET ? WHERE admin_id = 1`;
+        let values = {
+            password : hash
+        };
+        // Store hash in your password DB.
+        db.query(sql, values, (err, results)=>{
+            if(!err){
+                req.flash('success_msg', 'Password Changed Successfully!');
+                res.redirect('/adminPanel/settings');
+            }
+        });
     });
+
 });
 
 

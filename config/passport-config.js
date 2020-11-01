@@ -1,5 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy;
 const mysql = require('mysql');
+var bcrypt = require('bcrypt');
 
 module.exports = function(passport){
     passport.use('admin-local',
@@ -10,11 +11,14 @@ module.exports = function(passport){
                 if(result.length == 0){
                     return done(null, false, {message : "Not registered username."});
                 }else{
-                    if(password == result[0].password){
-                        return done(null, result[0]);
-                    }else{
-                        return done(null, false, {message : "Wrong password"});
-                    }
+                    const hash = result[0].password.toString();
+                    bcrypt.compare(password, hash, function(err,response){
+                        if(response == true){
+                            return done(null, result[0]);
+                        }else{
+                            return done(null, false, {message : "Wrong password"});
+                        }
+                    });
                 }
             });
         })
@@ -29,11 +33,14 @@ module.exports = function(passport){
             if(result.length == 0){
                 return done(null, false, {message : "Not registered worker."});
             }else{
-                if(password == result[0].password){
-                    return done(null, result[0]);
-                }else{
-                    return done(null, false, {message : "Wrong password"});
-                }
+                const hash = result[0].password.toString();
+                bcrypt.compare(password, hash, (err,response)=>{
+                    if(response == true){
+                        return done(null, result[0]);
+                    }else{
+                        return done(null, false, {message : "Wrong password"});
+                    }
+                });
             }
         });
     })
