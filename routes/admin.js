@@ -36,8 +36,10 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
             yearlyEarnings = results[0].total;
             let sql = `SELECT * FROM all_payment ORDER BY id DESC LIMIT 1`; //LATEST PAYMENT CARD
             db.query(sql, (err,results)=>{
-                latestName = results[0].Name;
-                latestAmount = results[0].Amount;
+                if(results.length != 0){
+                    latestName = results[0].Name;
+                    latestAmount = results[0].Amount;
+                }
                 let sql = `SELECT COUNT(id) AS total FROM complaint WHERE Checkbox = 0`; //LATEST COMPLAINT CARD
                 db.query(sql, (err, results)=>{
                     totalComplaints = results[0].total;

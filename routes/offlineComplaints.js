@@ -16,7 +16,7 @@ route.get('/',ensureAuthenticateds, (req,res)=>{
 
 route.post("/",ensureAuthenticateds, (req, res) => {
   stb = req.body.stb;
-  let sql = `SELECT * FROM all_info WHERE stb = "${stb}"`;
+  let sql = `SELECT * FROM infos WHERE stb = "${stb}"`;
   db.query(sql, (err, results) => {
     res.render("offlineComplaints", {
       user: req.user,
@@ -31,7 +31,7 @@ route.post("/",ensureAuthenticateds, (req, res) => {
 
 route.post('/saveComplaint',ensureAuthenticateds,(req,res)=>{
 
-  db.query(`SELECT * FROM all_info WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
+  db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
     let sql = `INSERT INTO complaint SET ?`;
     let values = {
       Name : results[0].Name,

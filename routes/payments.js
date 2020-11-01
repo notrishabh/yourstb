@@ -11,6 +11,11 @@ route.get("/today", ensureAuthenticateds, (req, res) => {
   var mm = String(today.getMonth() + 1);
   var yyyy = String(today.getFullYear());
 
+  if (mm.length < 2) 
+        mm = '0' + mm;
+  if (dd.length < 2) 
+      dd = '0' + dd;
+
   today = yyyy + "-" + mm + "-" + dd;
 
   let sql = `SELECT * FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" ORDER BY id DESC`;
