@@ -8,16 +8,38 @@ const checksum_lib = require('../checksum');
 
 
 route.get('/', ensureAuthenticated, (req,res)=>{
+    var d = new Date();
+    var month = new Array();
+    month[0] = "January";
+    month[1] = "February";
+    month[2] = "March";
+    month[3] = "April";
+    month[4] = "May";
+    month[5] = "June";
+    month[6] = "July";
+    month[7] = "August";
+    month[8] = "September";
+    month[9] = "October";
+    month[10] = "November";
+    month[11] = "December";
+  
+    var monthName = month[d.getMonth()];
+    console.log(monthName);
+
+    var month3 = [];
+    for(var i =0; i<3; i++){
+        month3.push(month[d.getMonth()-i]);
+    }
+
     console.log(req.user);
-    var months = ["August","September","October"];
-    var monthData = months.join();
+    var monthData = month3.join();
          
        let sql = `SELECT ${monthData} FROM infos WHERE Stb = "${req.user.Stb}"`;
        db.query(sql, (err,results)=>{
            res.render('customerPanel', {
             data : req.user,
             historyData : results,
-            months : months
+            months : month3
         });
        });
 

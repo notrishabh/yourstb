@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Contact us</title>
     <link rel="icon" href="icon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -13,8 +13,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Poppins&display=swap" rel="stylesheet">    
 
     <style>
-        body{
+        body,html{
             font-family: 'Poppins';
+            background: url('contact.png')  0% 10% no-repeat;
+            background-size: cover;
+
+            height: 100%;
+            width : 100%;
+
         }
         #brandlogo{
             margin-left: 3%;
@@ -35,15 +41,15 @@
         #navbar-right-link:hover{
             color: #bb4747;
         }
-        .container{
-            margin-top: 5%;
-        }
-        #admLog{
-            width: 40vw;
-        }
-        .form-control{
-            border: solid 2px rgb(211, 211, 211);
-        }
+        /* .row{
+            background-color: red;
+        } */
+        /* .container{
+            background-color: blue;
+        } */
+
+
+       
 
     </style>
 </head>
@@ -58,38 +64,48 @@
           <ul class="navbar-nav ml-auto pl-4 mr-5 pt-2 " id="right-nav">
             <li class="nav-item">
                 <li class="nav-item"><a href="/" class="nav-link" id="navbar-right-link"><i class="far fa-user"></i> Login as a Customer</a></li>
-                <li class="nav-item"><a href="/contactus" class="nav-link" id="navbar-right-link"><i class="fas fa-at"></i></i> Contact Us</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" id="navbar-right-link"><i class="fas fa-at"></i></i> Contact Us</a></li>
              </li>
           </ul>
         </div>
       </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5 mt-5">
-                <h1 class="display-4">Admin Login</h1>
-                <form action="/adminLogin" method="POST" autocomplete="off">
-                    <% include ./partials/messages %>
-                    <p class="lead" style="color: red;"><%=error%></p>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" name="username" required>
+
+      <div class="container-fluid h-75">
+          <div class="row h-100">
+            <div class="col-md-1"></div>
+            <div class="col-md-4 h-100">
+                <div class="row h-100 align-items-center" style="font-size: large;">
+                    <div class="col">
+                        <div>
+                            <i class="fas fa-lg fa-phone" style="color: rgb(252, 112, 112);"></i>
+                            &nbsp;Phone
+                            <p> &nbsp; &nbsp; &nbsp; +91 9211 314 535</p>
+                         
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" required>
+
+                    <div class="col">
+                        <div>
+                            <i class="fas fa-lg fa-envelope" style="color: rgb(252, 112, 112);"></i>   
+                            &nbsp;Email
+                            <p> &nbsp; &nbsp; &nbsp;  support@kvcable.in</p>
+                         
+                        </div>
+
                     </div>
-                    <div class="custom-control custom-switch mb-3">
-                        <input type="checkbox" class="custom-control-input" id="customSwitch1" name="workerCheck">
-                        <label class="custom-control-label" for="customSwitch1">Worker Login</label>
-                    </div>
-                    <button type="submit" class="btn btn-outline-danger">Login</button>
-                </form>
+                </div>
             </div>
-            <div class="col-md-4 ml-5">
-                <img src="admLog.svg" alt="" id="admLog">
-            </div>
-        </div>
-  
-    </div>
+              <div class="col-md-6 offset-md-1">
+                <img src="contactus.svg" alt="" class="float-right" style="width: 95%; height: 100%;">
+              </div>
+          </div>
+
+
+
+      </div>
+     
+
+
+
 </body>
 </html>

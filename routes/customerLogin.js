@@ -11,6 +11,11 @@ route.get('/', (req,res)=>{
     });
 });
 
+route.get('/contactus', (req,res)=>{
+    res.render('contactus', {
+    });
+});
+
 route.post('/', (req,res, next)=>{
     passport.authenticate('customer-local', {
         successRedirect: '/customerPanel',
