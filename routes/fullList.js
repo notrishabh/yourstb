@@ -35,6 +35,9 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
         if(!err){
             req.flash('success_msg', 'Record Edited Successfully!');
             res.redirect("/adminPanel/fullList/" + region_id);
+        }else{
+            req.flash('error_msg', 'Error Editing Record');
+            res.redirect("/adminPanel/fullList/" + region_id);
         }
     });
 });
