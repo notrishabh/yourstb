@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Full List (<%=results[0].region_name%>)</title>
-    <link rel="icon" href="/icon.png" type="image/x-icon">
+    <link rel="icon" href="/wicon.jpg" type="image/x-icon">
 
 
     
@@ -86,6 +86,10 @@
                               <label for="mobile">Mobile</label>
                               <input type="text" class="form-control" id="mobileEdit" name="mobile" >
                           </div>
+                          <div class="form-group">
+                            <label for="Stb">Stb</label>
+                            <input type="text" class="form-control" id="stbEdit" name="stbnew" >
+                          </div>
                             <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-user-edit"></i> Edit</button>
                         </form>
                           </div>    
@@ -111,6 +115,7 @@
                       <th>Payment Date</th>
                       <th>Expiry Date</th>
                       <th>Edit</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -123,6 +128,7 @@
                       <th>Payment Date</th>
                       <th>Expiry Date</th>
                       <th>Edit</th>
+                      <th>Delete</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -142,7 +148,8 @@
                           <td><%= dateExpiry[0] %></td>
                           <td>
                            
-                            <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>"; 
+                            <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>";
+                             document.getElementById("stbEdit").value = "<%=results[i].Stb%>"; 
                              document.getElementById("addressEdit").value = "<%=results[i].Address%>"; 
                              document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
                              document.getElementById("stb").value = "<%=results[i].Stb%>"; 
@@ -155,6 +162,14 @@
                              class="btn btn-primary" id="editBtn"><i class="fas fa-edit"></i></button>
                            
                            </td>
+                           <td>
+                            <form action="/adminPanel/fullList/delete/<%=region_id%>" method="POST">
+                              <div>
+                                <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
+                                <button class="btn btn-primary" onclick=confirmBtn() id="delBtn"><i class="fas fa-minus-circle"></i></button>
+                              </div>
+                            </form>
+                          </td>
                         </tr>
 
                     <% } 
@@ -194,6 +209,15 @@
               $('#dataTable').dataTable({
                 "ordering" : false
               });
+
+              function confirmBtn(){
+                    var r = confirm("Are you sure you want to remove the record?");
+                    if(r==true){
+                        document.getElementById('delBtn').type = "submit";
+                    }else{
+                        document.getElementById('delBtn').type = "reset";
+                    }
+                }
             </script>
 
 

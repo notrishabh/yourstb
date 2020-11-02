@@ -28,7 +28,8 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
     let values = {
         Name : req.body.name,
         Address : req.body.address,
-        Mobile : req.body.mobile
+        Mobile : req.body.mobile,
+        Stb : req.body.stbnew
     };
     db.query(sql, values, (err,results)=>{
         if(!err){
@@ -36,6 +37,19 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
             res.redirect("/adminPanel/fullList/" + region_id);
         }
     });
+});
+
+route.post('/delete/:region_id',ensureAuthenticateds,(req,res)=>{
+    var region_id = req.params.region_id;
+    var stb = req.body.Stb;
+    let sql = `DELETE FROM infos WHERE Stb="${stb}"`;
+    db.query(sql, (err,results)=>{
+      if(!err){
+        req.flash('error_msg', 'Record Deleted Successfully!');
+        res.redirect("/adminPanel/fullList/" + region_id);
+    }
+    });
+
 });
 
 
