@@ -32,6 +32,8 @@ route.post("/",ensureAuthenticateds, (req, res) => {
 route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var amount;
   var packageOpted;
+  var duration = req.body.duration;
+
   if(req.body.exampleField){
     amount = req.body.exampleField;
   }else{
@@ -48,7 +50,10 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   }else{
     packageOpted = "Custom";
   }
- //ADD QUERY FOR INSERTING in all_info in respective month in production
+
+  var totalAmount = amount * duration;
+
+
   db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
     let sql = `INSERT INTO offline_payment SET ?`;
     let values = {
@@ -56,7 +61,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
       Address : results[0].Address,
       Mobile : results[0].Mobile,
       Stb : results[0].Stb,
-      Amount : amount,
+      Amount : totalAmount,
       packageOpted : packageOpted
     };
     db.query(sql, values, (err,results)=>{
@@ -79,17 +84,43 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     month[9] = "October";
     month[10] = "November";
     month[11] = "December";
+    month[12] = "January";
+    month[13] = "February";
+    month[14] = "March";
+    month[15] = "April";
+    month[16] = "May";
+    month[17] = "June";
+    month[18] = "July";
+    month[19] = "August";
+    month[20] = "September";
+    month[21] = "October";
+    month[22] = "November";
+    month[23] = "December";
               
     var monthName = month[d.getMonth()];
     var dateExpiry = new Date();
-    dateExpiry.setDate(dateExpiry.getDate() + 30);
+    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
 
-    let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
-    let listValues = {
-        dateExpiry : dateExpiry
-    };
-    db.query(listPay, listValues, (err,results)=>{
+
+    let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+    let listValues = {};
+    for(var i =0; i<duration; i++){
+        listValues[month[d.getMonth() + i]] = amount;
+    }
+    listValues['dateExpiry'] = dateExpiry;
+    db.query(listPay,listValues, (err,results)=>{
+      if(err){
+        console.log(err);
+      }
     });
+
+
+    // let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
+    // let listValues = {
+    //     dateExpiry : dateExpiry
+    // };
+    // db.query(listPay, listValues, (err,results)=>{
+    // });
 
     let all_payment = `INSERT INTO all_payment SET ?`;
     let all_values = {
@@ -97,7 +128,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         Address : results[0].Address,
         Mobile : results[0].Mobile,
         Stb : results[0].Stb,
-        Amount : amount,
+        Amount : totalAmount,
         Mode : 'Offline',
         dateExpiry : dateExpiry
     };
