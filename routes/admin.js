@@ -19,6 +19,24 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
     var sum = 'NA';
     var onlineCount = 'NA';
     var offlineCount = 'NA';
+    var dateSusp = new Date();
+    var dateToday = new Date();
+
+    var month = new Array();
+    month[0] = "January";
+    month[1] = "February";
+    month[2] = "March";
+    month[3] = "April";
+    month[4] = "May";
+    month[5] = "June";
+    month[6] = "July";
+    month[7] = "August";
+    month[8] = "September";
+    month[9] = "October";
+    month[10] = "November";
+    month[11] = "December";
+  
+    var monthName = month[dateToday.getMonth()];
 
 
     var today = new Date();
@@ -52,6 +70,24 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
                             let sql = `SELECT COUNT(id) AS offlineCount FROM all_payment WHERE Mode="Offline"`;  //PIE CHART
                             db.query(sql,(err,results)=>{
                                 offlineCount = results[0].offlineCount;
+                                dateSusp.setDate(dateSusp.getDate() - 60);
+                                dateSusp = dateSusp.toISOString().slice(0, 19).replace('T', ' ');
+                                dateToday = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+
+                                //SUSPENDED LIST STATUS 0=unpaid 1=paid
+                                let sql = `UPDATE infos SET suspended = 1 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
+                                           AND dateExpiry < "${dateSusp}"; 
+                                           UPDATE infos SET status = 1 WHERE dateExpiry > "${dateToday}" OR ${monthName} != 0;
+                                           UPDATE infos SET status = 0 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
+                                           AND dateExpiry < "${dateToday}" OR ${monthName} = 0`;
+                                db.query(sql, (err,rol)=>{
+                                    if(err){
+                                        console.log(err);
+                                        res.send(err);
+                                    }
+                                    
+                                });
                                 res.render('adminPanel', {
                                     user : req.user,
                                     monthlyEarnings : monthlyEarnings,
@@ -63,6 +99,25 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
                                     onlineCount : onlineCount,
                                     offlineCount : offlineCount
                                 });
+
+
+                                // dateSusp.setDate(dateSusp.getDate() - 40);
+
+                                // //SUSPENDED LIST STATUS 0=unpaid 1=paid
+                                // let sql = `UPDATE infos SET suspended = 1 WHERE dateExpiry < "${dateSusp}"; 
+                                //            UPDATE infos SET status = 1 WHERE dateExpiry > "${dateToday}" OR ${monthName} != 0;
+                                //            UPDATE infos SET status = 0 WHERE dateExpiry < "${dateToday}" OR ${monthName} = 0`;
+                                // // db.query(sql, (err,rol)=>{
+                                // //     if(err){
+                                // //         console.log(err);
+                                // //         res.send(err);
+                                // //     }else{
+                                // //         res.send(rol);
+                                // //     }
+                                    
+                                // // });
+
+                                
                             });
                             
                         });
@@ -129,6 +184,7 @@ route.use('/complaints', require('./complaints'));
 route.use('/offlinePayments', require('./offlinePayments'));
 route.use('/offlineComplaints', require('./offlineComplaints'));
 route.use('/fullList', require('./fullList'));
+route.use('/suspendedList', require('./suspendedList'));
 route.use('/unpaidList', require('./unpaidList'));
 route.use('/worker', require('./worker'));
 route.use('/newStb', require('./newStb'));

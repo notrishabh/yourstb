@@ -108,6 +108,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         listValues[month[d.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
+    listValues['status'] = 1;
     db.query(listPay,listValues, (err,results)=>{
       if(err){
         console.log(err);
@@ -115,12 +116,6 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     });
 
 
-    // let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
-    // let listValues = {
-    //     dateExpiry : dateExpiry
-    // };
-    // db.query(listPay, listValues, (err,results)=>{
-    // });
 
     let all_payment = `INSERT INTO all_payment SET ?`;
     let all_values = {

@@ -7,9 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Full Unpaid List</title>
+    <title>Suspended List</title>
     <link rel="icon" href="/wicon.jpg" type="image/x-icon">
-
 
     
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,7 +23,7 @@
  <body id="page-top">
    <div id="wrapper">
         <!-- Sidebar -->
-          <%- include('../partials/sidebar', {
+          <%- include('./partials/sidebar', {
             dashboard : '',
             payments : '',
             complaints : '',
@@ -41,66 +40,65 @@
 
             <!-- Main Content -->
             <div id="content">
-              <%- include('../partials/topbar', {heading: `Full Unpaid List`}); %>
+      
+              <%- include('./partials/topbar', {heading: 'Suspended List'}); %>
 
               <!-- End of Topbar -->
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
 
-                <div class="container-fluid">
-                  <div class="row align-items-center">
-                    <div class="col-md-4">
-                      <h1 class="h4 mb-4 text-gray-800"><i class="fas fa-chevron-right"></i> Please select a Region </h1>
-                    </div>
-                  </div>
-                </div>
-
-
-          <!-- DataTales Example -->
+                          <!-- DataTales Example -->
           <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Table View</h6>
+            </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Region Name</th>
-                      <th>Total Unpaid Connections</th>
-                      <th>View</th>
-                      <th>Download</th>
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Mobile</th>
+                      <th>STB No.</th>
+                      <th>Last Paid on</th>
+                      <th>Expiry Date</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>ID</th>
-                      <th>Region Name</th>
-                      <th>Total Unpaid Connections</th>
-                      <th>View</th>
-                      <th>Download</th>
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Mobile</th>
+                      <th>STB No.</th>
+                      <th>Last Paid on</th>
+                      <th>Expiry Date</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
+                        var date = results[i].datePaid.toString().split("GMT");
+                        var dateExpiry = results[i].dateExpiry.toString().split("GMT");
                         %>
 
                         <tr>
-                          <td><%= results[i].id %></td>
-                          <td><%= results[i].region_name %></td>
-                          <td><%= results[i].unpaidConnections %></td>
-                          <td>
-                            <a href="/adminPanel/unpaidList/<%=results[i].id%>" class="btn btn-primary"><i class="fas fa-book-open"></i></a>
-                          </td>
-                          <td>
-                            <a href="/adminPanel/unpaidList/<%=results[i].id%>/download" class="btn btn-primary"><i class="fas fa-arrow-circle-down"></i></a>
-                          </td>
+                          <td><%= i+1  %></td>
+                          <td><%= results[i].Name %></td>
+                          <td><%= results[i].Address %></td>
+                          <td><%= results[i].Mobile %></td>
+                          <td><%= results[i].Stb %></td>
+                          <td><%= date[0] %></td>
+                          <td><%= dateExpiry[0] %></td>
                         </tr>
 
                     <% } 
                   }else{ %>
                     <tr>
-                      <td colspan="3">No customers found</td>
+                      <td colspan="3">No Set top boxes suspended.</td>
                     </tr>
                   <% } %>
                     
@@ -114,7 +112,7 @@
       
                 
               </div>
-              <%- include('../partials/footer'); %>
+              <%- include('./partials/footer'); %>
             </div>
             </div>
           </div>
@@ -122,7 +120,7 @@
       
 
 
-          <%- include('../partials/vendor'); %>
+          <%- include('./partials/vendor'); %>
 
             <!-- Page level plugins -->
             <script src="/vendor/datatables/jquery.dataTables.min.js"></script>

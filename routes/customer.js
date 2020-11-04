@@ -168,7 +168,8 @@ route.post('/txn/payment', function(req, res){
 
                 let listPay = `UPDATE infos SET ${monthName}="${req.body.TXNAMOUNT}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
                 let listValues = {
-                    dateExpiry : dateExpiry
+                    dateExpiry : dateExpiry,
+                    status : 1
                 };
                 db.query(listPay, listValues, (err,results)=>{
                 });

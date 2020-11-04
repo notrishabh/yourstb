@@ -92,6 +92,8 @@
     </div>
   </li>
 
+
+
   <!-- Nav Item - Utilities Collapse Menu -->
   <!-- <li class="nav-item <%=complaints%>">
     <a class="nav-link" href="/adminPanel/complaints/pending">
@@ -141,16 +143,32 @@
     >
   </li>
 
-  <li class="nav-item <%=unpaidList%>">
-    <a class="nav-link" href="/adminPanel/unpaidList">
-      <i class="fas fa-store"></i>
-      <span>Unpaid List</span></a>
-  </li>
-
   <li class="nav-item <%=fullList%>">
-    <a class="nav-link" href="/adminPanel/fullList">
-      <i class="fas fa-fw fa-table"></i>
-      <span>Full List</span></a>
+    <a
+      class="nav-link collapsed"
+      href="#"
+      data-toggle="collapse"
+      data-target="#collapseFour"
+      aria-expanded="true"
+      aria-controls="collapseFour"
+    >
+    <i class="fas fa-fw fa-table"></i>
+    <span>Lists</span>
+    </a>
+    <div
+      id="collapseFour"
+      class="collapse"
+      aria-labelledby="headingFour"
+      data-parent="#accordionSidebar"
+    >
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/adminPanel/fullList">Full List</a>
+          <a class="collapse-item" href="/adminPanel/unpaidList">
+            Unpaid List</a>
+          <a class="collapse-item" href="/adminPanel/suspendedList">
+            Suspended List</a>
+      </div>
+    </div>
   </li>
 
 

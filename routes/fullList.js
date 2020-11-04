@@ -9,7 +9,8 @@ var success = [];
 
 
 route.get("/",ensureAuthenticateds,(req,res)=>{
-    let sql = `SELECT COUNT(infos.Stb) AS totalConnections, region.id, region.region_name FROM infos INNER JOIN region ON infos.region_id = region.id GROUP BY infos.region_id`;
+    let sql = `SELECT COUNT(infos.Stb) AS totalConnections, region.id, region.region_name, infos.status FROM infos INNER JOIN region
+               ON infos.region_id = region.id AND infos.suspended = 0 GROUP BY infos.region_id`;
 
     db.query(sql,(err,results)=>{
         res.render('fullList/fullList', {
@@ -45,10 +46,10 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
 route.post('/delete/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var stb = req.body.Stb;
-    let sql = `DELETE FROM infos WHERE Stb="${stb}"`;
+    let sql = `UPDATE infos SET suspended = 1 WHERE Stb="${stb}"`;
     db.query(sql, (err,results)=>{
       if(!err){
-        req.flash('error_msg', 'Record Deleted Successfully!');
+        req.flash('error_msg', 'STB Suspended Successfully!');
         res.redirect("/adminPanel/fullList/" + region_id);
     }
     });
@@ -75,7 +76,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
   
     var monthName = month[d.getMonth()];
     let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id}`;
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND infos.suspended = 0`;
     db.query(sql, (err,results)=>{
         res.render('fullList/allRegions', {
             user : req.user,
@@ -121,7 +122,7 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
         { header: 'Mobile', key: 'Mobile', width: 15 },
         { header: 'Amount', key: 'Amount', width: 10 },
     ];
-    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}"`;
+    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}" AND suspended = 0`;
     db.query(sql, (err,results)=>{
         results.forEach((result)=>{
             var data = JSON.parse(JSON.stringify(result));

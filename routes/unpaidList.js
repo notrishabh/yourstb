@@ -26,7 +26,7 @@ route.get("/",ensureAuthenticateds,(req,res)=>{
     var monthName = month[d.getMonth()];
 
     let sql =   `SELECT COUNT(infos.Stb) AS unpaidConnections, region.id, region.region_name 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND ${monthName} = 0 OR dateExpiry < "${d}"
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND status = 0 AND suspended = 0
                 GROUP BY infos.region_id`;
 
     db.query(sql,(err,results)=>{
@@ -58,7 +58,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
   
     var monthName = month[d.getMonth()];
     let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND ${monthName} = 0`;
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND status = 0 AND suspended = 0`;
     db.query(sql, (err,results)=>{
         res.render('unpaidList/allRegions', {
             user : req.user,
@@ -148,18 +148,14 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
           listValues[month[d.getMonth() + i]] = amount;
       }
       listValues['dateExpiry'] = dateExpiry;
+      listValues['status'] = 1;
       db.query(listPay,listValues, (err,results)=>{
         if(err){
           console.log(err);
         }
       });
   
-      // let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
-      // let listValues = {
-      //     dateExpiry : dateExpiry
-      // };
-      // db.query(listPay, listValues, (err,results)=>{
-      // });
+
   
       let all_payment = `INSERT INTO all_payment SET ?`;
       let all_values = {
@@ -211,7 +207,7 @@ route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
         { header: 'Mobile', key: 'Mobile', width: 15 },
         { header: 'Amount', key: 'Amount', width: 10 },
     ];
-    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}" AND ${monthName} = 0`;
+    let sql = `SELECT Name, Address, Mobile, Stb, ${monthName} AS Amount FROM infos WHERE region_id = "${region}" AND status = 0 AND suspended = 0`;
     db.query(sql, (err,results)=>{
         results.forEach((result)=>{
             var data = JSON.parse(JSON.stringify(result));

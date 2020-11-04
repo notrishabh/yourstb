@@ -83,11 +83,23 @@
                               Diamond Pack <i class="fas fa-rupee-sign"></i> 454
                             </label>
                           </div>
-                            <div class="form-check mb-3">
-                              <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
-                              <label class="form-check-label" for="customRadio" >Custom Amount</label>
-                              <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required />
+                          <div class="form-check mb-3">
+                            <div class="row align-items-center">
+                              <div class="col-4">
+                                <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
+                                <label class="form-check-label" for="customRadio" >Custom Amount</label>
+                                <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required /> 
+                              </div> 
+                                <div class="col-3">
+                                  <select class="form-control" name="duration" required>
+                                      <% for(var i=1; i<= 12 ; i++){%>
+                                        <option value="<%=i%>"><%=i%> Months</option>
+                                    <%}%>
+                                </select>                        
+                              </div>  
+                              
                             </div>
+                          </div>
                             <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
                           </div>
                         </form>  
