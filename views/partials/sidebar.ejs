@@ -65,13 +65,40 @@
     </div>
   </li>
 
-  <!-- Nav Item - Utilities Collapse Menu -->
   <li class="nav-item <%=complaints%>">
+    <a
+      class="nav-link collapsed"
+      href="#"
+      data-toggle="collapse"
+      data-target="#collapseThree"
+      aria-expanded="true"
+      aria-controls="collapseThree"
+    >
+    <i class="fas fa-fw fa-wrench"></i>
+    <span>Complaints</span>
+    </a>
+    <div
+      id="collapseThree"
+      class="collapse"
+      aria-labelledby="headingThree"
+      data-parent="#accordionSidebar"
+    >
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/adminPanel/complaints/pending">Pending</a>
+        <a class="collapse-item" href="/adminPanel/complaints/solved"
+          >Solved</a
+        >
+      </div>
+    </div>
+  </li>
+
+  <!-- Nav Item - Utilities Collapse Menu -->
+  <!-- <li class="nav-item <%=complaints%>">
     <a class="nav-link" href="/adminPanel/complaints/pending">
       <i class="fas fa-fw fa-wrench"></i>
       <span>Complaints</span></a
     >
-  </li>
+  </li> -->
 
   <li class="nav-item <%=worker%>">
     <a class="nav-link" href="/adminPanel/worker">
