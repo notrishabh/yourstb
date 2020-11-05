@@ -76,18 +76,18 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 
 
                                 //SUSPENDED LIST STATUS 0=unpaid 1=paid
-                                let sql = `UPDATE infos SET suspended = 1 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
+                                let sqlSusp = `UPDATE infos SET suspended = 1 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
                                            AND dateExpiry < "${dateSusp}"; 
-                                           UPDATE infos SET status = 1 WHERE dateExpiry > "${dateToday}" OR ${monthName} != 0;
-                                           UPDATE infos SET status = 0 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
+                                           UPDATE infos SET status = 0 WHERE status != 2 AND dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
                                            AND dateExpiry < "${dateToday}" OR ${monthName} = 0`;
-                                db.query(sql, (err,rol)=>{
+                                db.query(sqlSusp, (err,rol)=>{
                                     if(err){
                                         console.log(err);
                                         res.send(err);
                                     }
                                     
                                 });
+                                
                                 res.render('adminPanel', {
                                     user : req.user,
                                     monthlyEarnings : monthlyEarnings,
@@ -185,6 +185,7 @@ route.use('/offlinePayments', require('./offlinePayments'));
 route.use('/offlineComplaints', require('./offlineComplaints'));
 route.use('/fullList', require('./fullList'));
 route.use('/suspendedList', require('./suspendedList'));
+route.use('/balanceList', require('./balanceList'));
 route.use('/unpaidList', require('./unpaidList'));
 route.use('/worker', require('./worker'));
 route.use('/newStb', require('./newStb'));

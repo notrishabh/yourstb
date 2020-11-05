@@ -33,6 +33,13 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var amount;
   var packageOpted;
   var duration = req.body.duration;
+  var balance;
+  
+  if(req.body.balanceField){
+    balance = req.body.balanceField;
+  }else{
+    balance = 0;
+  }
 
   if(req.body.exampleField){
     amount = req.body.exampleField;
@@ -108,10 +115,17 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         listValues[month[d.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
-    listValues['status'] = 1;
+    if(balance > 0){
+      listValues['status'] = 2;
+      listValues['balance'] = balance;
+    }else{
+      listValues['status'] = 1;
+    }
     db.query(listPay,listValues, (err,results)=>{
       if(err){
         console.log(err);
+      }else{
+        console.log(results);
       }
     });
 

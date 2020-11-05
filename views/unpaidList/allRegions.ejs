@@ -20,10 +20,18 @@
     <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <script>
-      function fields(){
-        document.getElementById('customField').disabled = false;
+      function balanceFields(){
+        document.getElementById('balanceField').disabled = false;
       }
     </script>
+    
+    <style>
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
 
 </head>
  
@@ -80,36 +88,12 @@
     
                         <form action="/adminPanel/unpaidList/<%=region_id%>/pay" method="POST">
                           <input type="hidden" name='Stb' id='Stb'>
-                          <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="153" required>
-                            <label class="form-check-label" for="exampleRadios1">
-                              Basic Pack <i class="fas fa-rupee-sign"></i> 153
-                            </label>
-                          </div>
-                          <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="275">
-                            <label class="form-check-label" for="exampleRadios2">
-                              Silver Pack <i class="fas fa-rupee-sign"></i> 275
-                            </label>
-                          </div>
-                          <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="360">
-                            <label class="form-check-label" for="exampleRadios3">
-                              Gold Pack <i class="fas fa-rupee-sign"></i> 360
-                            </label>
-                          </div>
-                          <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="454">
-                            <label class="form-check-label" for="exampleRadios4">
-                              Diamond Pack <i class="fas fa-rupee-sign"></i> 454
-                            </label>
-                          </div>
+                          <input type="hidden" name='totalBalance' id='totalBalance'>
                           <div class="form-check mb-3">
                             <div class="row align-items-center">
                               <div class="col-4">
-                                <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
-                                <label class="form-check-label" for="customRadio" >Custom Amount</label>
-                                <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required /> 
+                                <label class="form-check-label" for="customRadio" >Amount</label>
+                                <input type="number" class="ml-3" name="exampleField" id="customField"  required /> 
                               </div> 
                                 <div class="col-3">
                                   <select class="form-control" name="duration" required>
@@ -119,6 +103,15 @@
                                 </select>                        
                               </div>  
                               
+                            </div>
+                          </div>
+                          <div class="form-check mb-3">
+                            <div class="row align-items-center">
+                              <div class="col-4">
+                                <input type="radio" name="balanceRadio" id="customRadio" class="form-check-input" onclick=balanceFields()>
+                                <label class="form-check-label" for="balanceRadio" >Balance</label>
+                                <input type="number" class="ml-4" name="balanceField" id="balanceField"  disabled required /> 
+                              </div> 
                             </div>
                           </div>
                             <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
@@ -143,6 +136,7 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
+                      <th>Amount</th>
                       <th>Pay</th>
                     </tr>
                   </thead>
@@ -152,12 +146,24 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>STB No.</th>
+                      <th>Amount</th>
                       <th>Pay</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <% if(results.length){ 
                       for(var i = 0;i < results.length;i++) { 
+                        var d = new Date();
+                        var totalBalance;
+                        if(results[i].balance != 0){
+                          if(results[i].dateExpiry > d || results[i].Amount != 0){
+                            totalBalance = results[i].balance;
+                          }else{
+                            totalBalance = results[i].PrevAmount + 2 * results[i].balance;
+                          }
+                        }else{
+                          totalBalance = results[i].PrevAmount;
+                        }
                         %>
 
                         <tr>
@@ -165,10 +171,13 @@
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Stb %></td>
+                          <td><%= totalBalance %></td>
                           <td>
                             <button class="btn btn-primary" 
                             onclick="document.getElementById('payForm').style.display = 'block'; 
-                            document.getElementById('Stb').value = '<%=results[i].Stb%>'"
+                            document.getElementById('Stb').value = '<%=results[i].Stb%>';
+                            document.getElementById('customField').value = '<%= totalBalance %>';
+                            document.getElementById('totalBalance').value = '<%= totalBalance %>'"
                             ><i class="fas fa-money-bill-wave"></i></button>
                           </td>
                         </tr>

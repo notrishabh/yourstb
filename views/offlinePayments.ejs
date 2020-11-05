@@ -34,6 +34,10 @@
       function fields(){
         document.getElementById('customField').disabled = false;
       }
+      function balanceFields(){
+        document.getElementById('balanceField').disabled = false;
+      }
+      
     </script>
   </head>
 
@@ -128,6 +132,15 @@
                               </select>                        
                             </div>  
                             
+                          </div>
+                        </div>
+                        <div class="form-check mb-3">
+                          <div class="row align-items-center">
+                            <div class="col-4">
+                              <input type="radio" name="balanceRadio" id="customRadio" class="form-check-input" onclick=balanceFields()>
+                              <label class="form-check-label" for="balanceRadio" >Balance</label>
+                              <input type="text" class="ml-4" name="balanceField" id="balanceField"  disabled required /> 
+                            </div> 
                           </div>
                         </div>
                         <!-- <div class="form-check mb-3">

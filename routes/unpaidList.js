@@ -57,9 +57,14 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
     month[11] = "December";
   
     var monthName = month[d.getMonth()];
-    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND status = 0 AND suspended = 0`;
+    var prevMonthName = month[d.getMonth() - 1];
+    let sql = `SELECT region.region_name,infos.status,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.dateExpiry,infos.${prevMonthName} AS PrevAmount,infos.balance,infos.${monthName} AS Amount 
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND status != 1 AND suspended = 0`;
     db.query(sql, (err,results)=>{
+      if(err){
+        res.send(err)
+      }
+
         res.render('unpaidList/allRegions', {
             user : req.user,
             results : results,
@@ -74,12 +79,20 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var amount;
     var packageOpted;
     var duration = req.body.duration;
+    var totalBalance = req.body.totalBalance;
 
-    if(req.body.exampleField){
-      amount = req.body.exampleField;
+
+    var balance=0;
+  
+    if(req.body.balanceField){
+      balance += req.body.balanceField;
     }else{
-      amount = req.body.exampleRadios;
+      balance += 0;
     }
+  
+
+    amount = req.body.exampleField;
+
     if(amount == "153"){
       packageOpted = "Basic";
     } else if(amount == "275"){
@@ -91,6 +104,10 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     }else{
       packageOpted = "Custom";
     }
+
+    // if(amount < totalBalance){
+    //   balance += amount - totalBalance;
+    // }
 
     var totalAmount = amount * duration;
 
@@ -140,20 +157,42 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       var monthName = month[d.getMonth()];
       var dateExpiry = new Date();
       dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
-
       
-      let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
-      let listValues = {};
-      for(var i =0; i<duration; i++){
-          listValues[month[d.getMonth() + i]] = amount;
+      console.log(results[0].dateExpiry);
+
+      if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
+        let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+        let listValues = {};
+        for(var i =0; i<duration; i++){
+            listValues[month[d.getMonth() + i]] = amount;
+        }
+        listValues['dateExpiry'] = dateExpiry;
+       
+        db.query(listPay,listValues, (err,results)=>{
+          if(err){
+            console.log(err);
+          }
+        });
       }
-      listValues['dateExpiry'] = dateExpiry;
-      listValues['status'] = 1;
-      db.query(listPay,listValues, (err,results)=>{
+
+
+      let balancePay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
+      let balanceValues = {};
+      console.log(balance);
+      if(balance > 0){
+        balanceValues['status'] = 2;
+        balanceValues['balance'] = balance;
+      }else{
+        balanceValues['status'] = 1;
+        balanceValues['balance'] = 0;
+      }
+      db.query(balancePay,balanceValues, (err,results)=>{
         if(err){
           console.log(err);
         }
       });
+
+
   
 
   
