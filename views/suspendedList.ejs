@@ -47,6 +47,9 @@
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <% include ./partials/messages %>
+                <p class="lead" style="color: red;"><%=success%></p>
+
 
                           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -65,6 +68,7 @@
                       <th>STB No.</th>
                       <th>Last Paid on</th>
                       <th>Expiry Date</th>
+                      <th>Unsuspend</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -76,6 +80,7 @@
                       <th>STB No.</th>
                       <th>Last Paid on</th>
                       <th>Expiry Date</th>
+                      <th>Unsuspend</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -93,6 +98,14 @@
                           <td><%= results[i].Stb %></td>
                           <td><%= date[0] %></td>
                           <td><%= dateExpiry[0] %></td>
+                          <td>
+                            <form action="/adminPanel/suspendedList/remove" method="POST">
+                              <div>
+                                <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
+                                <button class="btn btn-primary" onclick=confirmBtn() id="delBtn"><i class="fas fa-minus-circle"></i></button>
+                              </div>
+                            </form>
+                          </td>
                         </tr>
 
                     <% } 
@@ -128,6 +141,18 @@
 
             <!-- Page level custom scripts -->
             <script src="/scripts/datatables.js"></script>
+
+            <script>
+
+              function confirmBtn(){
+                    var r = confirm("Are you sure you want to unsuspend the STB?");
+                    if(r==true){
+                        document.getElementById('delBtn').type = "submit";
+                    }else{
+                        document.getElementById('delBtn').type = "reset";
+                    }
+                }
+            </script>
 
 
  </body>
