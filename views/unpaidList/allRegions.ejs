@@ -89,8 +89,26 @@
                         <form action="/adminPanel/unpaidList/<%=region_id%>/pay" method="POST">
                           <input type="hidden" name='Stb' id='Stb'>
                           <input type="hidden" name='totalBalance' id='totalBalance'>
-                          <div class="form-check mb-3">
-                            <div class="row align-items-center">
+                          <div class="form-row mb-3">
+                            <div class="col">
+                              <label for="name">Name</label>
+                              <input type="text" class="form-control" id="name" disabled>
+                            </div>
+                            <div class="col">
+                              <label for="address">Address</label>
+                              <input type="text" class="form-control" id="address" disabled>
+                            </div>
+                            <div class="col">
+                              <label for="mobile">Mobile</label>
+                              <input type="text" class="form-control" id="mobile" disabled>
+                            </div>
+                            <div class="col">
+                              <label for="stbDisp">Stb</label>
+                              <input type="text" class="form-control" id="stbDisp" disabled>
+                            </div>
+                          </div>
+
+                            <div class="form-row mb-3">
                               <div class="col-4">
                                 <label class="form-check-label" for="customRadio" >Amount</label>
                                 <input type="number" class="ml-3" name="exampleField" id="customField"  required /> 
@@ -104,9 +122,9 @@
                               </div>  
                               
                             </div>
-                          </div>
+                       
                           <div class="form-check mb-3">
-                            <div class="row align-items-center">
+                            <div class="form-row align-items-center">
                               <div class="col-4">
                                 <input type="radio" name="balanceRadio" id="customRadio" class="form-check-input" onclick=balanceFields()>
                                 <label class="form-check-label" for="balanceRadio" >Balance</label>
@@ -177,7 +195,11 @@
                             onclick="document.getElementById('payForm').style.display = 'block'; 
                             document.getElementById('Stb').value = '<%=results[i].Stb%>';
                             document.getElementById('customField').value = '<%= totalBalance %>';
-                            document.getElementById('totalBalance').value = '<%= totalBalance %>'"
+                            document.getElementById('totalBalance').value = '<%= totalBalance %>';
+                            document.getElementById('name').value = '<%= results[i].Name %>';
+                            document.getElementById('address').value = '<%= results[i].Address %>';
+                            document.getElementById('mobile').value = '<%= results[i].Mobile %>';
+                            document.getElementById('stbDisp').value = '<%= results[i].Stb %>';"
                             ><i class="fas fa-money-bill-wave"></i></button>
                           </td>
                         </tr>
