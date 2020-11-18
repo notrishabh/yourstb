@@ -34,6 +34,14 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var packageOpted;
   var duration = req.body.duration;
   var balance;
+
+  var startDate = req.body.startDate;
+
+
+  var parts =startDate.split('-');
+  var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+
+
   
   if(req.body.balanceField){
     balance = req.body.balanceField;
@@ -41,11 +49,9 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     balance = 0;
   }
 
-  if(req.body.exampleField){
-    amount = req.body.exampleField;
-  }else{
-    amount = req.body.exampleRadios;
-  }
+  amount = req.body.exampleField;
+
+ 
   if(amount == "153"){
     packageOpted = "Basic";
   } else if(amount == "275"){
@@ -106,15 +112,16 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
               
     var monthName = month[d.getMonth()];
     var dateExpiry = new Date();
-    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+    dateExpiry.setDate(mydate.getDate() + (30 * duration));
 
 
-    let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+    let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
     let listValues = {};
     for(var i =0; i<duration; i++){
         listValues[month[d.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
+    listValues['datePaid'] = mydate;
     if(balance > 0){
       listValues['status'] = 2;
       listValues['balance'] = balance;
@@ -124,8 +131,6 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     db.query(listPay,listValues, (err,results)=>{
       if(err){
         console.log(err);
-      }else{
-        console.log(results);
       }
     });
 

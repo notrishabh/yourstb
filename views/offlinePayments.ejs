@@ -39,6 +39,15 @@
       }
       
     </script>
+    <style>
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+    </style>
   </head>
 
   <body id="page-top">
@@ -89,7 +98,7 @@
                 <div class="card">
                   <h5 class="card-header">Payment Amount</h5>
                   <div class="card-body">
-                    <h5 class="card-title">Select Package or Custom</h5>
+                    <!-- <h5 class="card-title">Select Package or Custom</h5>
 
                     <form action="/adminPanel/offlinePayments/savePayment" method="POST">
                       <input type="hidden" name='Stb'  value="<%=results.Stb%>">
@@ -119,18 +128,23 @@
                       </div>
                         <div class="form-check mb-3">
                           <div class="row align-items-center">
-                            <div class="col-4">
+                            <div class="col-md-4">
                               <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
                               <label class="form-check-label" for="customRadio" >Custom Amount</label>
                               <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required /> 
                             </div> 
-                              <div class="col-3">
+                              <div class="col-md-3">
                                 <select class="form-control" name="duration" required>
                                     <% for(var i=1; i<= 12 ; i++){%>
                                       <option value="<%=i%>"><%=i%> Months</option>
                                   <%}%>
                               </select>                        
                             </div>  
+                            <div class="col-md-5">
+                              <label class="form-check-label" for="startDate" >Start Date</label>
+                              <input type="date" name="startDate" max="3000-12-31" 
+                                     min="1000-01-01" class="form-control" id="startDate">
+                            </div>
                             
                           </div>
                         </div>
@@ -143,12 +157,50 @@
                             </div> 
                           </div>
                         </div>
-                        <!-- <div class="form-check mb-3">
-
-                        </div> -->
+                       
                         <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Save</button>
                       </div>
-                    </form>             
+                    </form>              -->
+                    <form action="/adminPanel/offlinePayments/savePayment" method="POST">
+                      <input type="hidden" name='Stb'  value="<%=results.Stb%>">
+
+                        <div class="form-row mb-3 align-items-center">
+                          <div class="col-md-3">
+                            <label class="form-check-label" for="customField" >Amount</label>
+                            <input type="number" class="form-control" name="exampleField" id="customField"  required /> 
+                          </div> 
+                            <div class="col-md-4">
+                              <label class="form-check-label" for="duration" >Validity</label>
+                              <select class="form-control" name="duration" id="duration" required>
+                                  <% for(var i=1; i<= 12 ; i++){%>
+                                    <option value="<%=i%>"><%=i%> Months</option>
+                                <%}%>
+                            </select>                        
+                          </div>  
+                          <div class="col-md-5">
+                            <label class="form-check-label" for="startDate" >Start Date</label>
+                            <input type="date" name="startDate" max="3000-12-31" 
+                                   min="1000-01-01" class="form-control" id="startDate">
+                          </div>
+                          
+                        </div>
+                        
+                        
+                   
+                      <div class="form-check mb-3">
+                        <div class="form-row align-items-center">
+                          <div class="col-4">
+                            <input type="radio" name="balanceRadio" id="customRadio" class="form-check-input" onclick=balanceFields()>
+                            <label class="form-check-label" for="balanceRadio" >Balance</label>
+                            <input type="number" class="ml-4" name="balanceField" id="balanceField"  disabled required /> 
+                          </div> 
+                        </div>
+                      </div>
+                      
+                        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
+                      </div>
+                    </form>  
+
                   </div>
                   <% }else{ %>
                     <h5 style="color: red;">No Customer found.</h5>
@@ -167,6 +219,12 @@
     <%- include('partials/vendor'); %>
 
     <!-- Page level custom scripts -->
+    <script>
+      var myDate = document.getElementById("startDate");
+      var date1 = new Date();
+      myDate.valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()));
+
+    </script>
    
   </body>
 </html>
