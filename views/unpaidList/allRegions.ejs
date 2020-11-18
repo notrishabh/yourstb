@@ -108,20 +108,28 @@
                             </div>
                           </div>
 
-                            <div class="form-row mb-3">
-                              <div class="col-4">
-                                <label class="form-check-label" for="customRadio" >Amount</label>
-                                <input type="number" class="ml-3" name="exampleField" id="customField"  required /> 
+                            <div class="form-row mb-3 align-items-center">
+                              <div class="col-md-3">
+                                <label class="form-check-label" for="customField" >Amount</label>
+                                <input type="number" class="form-control" name="exampleField" id="customField"  required /> 
                               </div> 
-                                <div class="col-3">
-                                  <select class="form-control" name="duration" required>
+                                <div class="col-md-4">
+                                  <label class="form-check-label" for="duration" >Validity</label>
+                                  <select class="form-control" name="duration" id="duration" required>
                                       <% for(var i=1; i<= 12 ; i++){%>
                                         <option value="<%=i%>"><%=i%> Months</option>
                                     <%}%>
                                 </select>                        
                               </div>  
+                              <div class="col-md-5">
+                                <label class="form-check-label" for="startDate" >Start Date</label>
+                                <input type="date" name="startDate" max="3000-12-31" 
+                                       min="1000-01-01" class="form-control" id="startDate">
+                              </div>
                               
                             </div>
+                            
+                            
                        
                           <div class="form-check mb-3">
                             <div class="form-row align-items-center">
@@ -132,6 +140,7 @@
                               </div> 
                             </div>
                           </div>
+                          
                             <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
                           </div>
                         </form>  
@@ -241,6 +250,15 @@
               $('#dataTable').dataTable({
                 "ordering" : false
               });
+
+              
+                var myDate = document.getElementById("startDate");
+                var date1 = new Date();
+                myDate.valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()));
+
+                // var midnightUtcDate = myDate.valueAsDate;
+                // var date2 = new Date(midnightUtcDate.getUTCFullYear(), midnightUtcDate.getUTCMonth(), midnightUtcDate.getUTCDate());
+                          
             </script>
 
 

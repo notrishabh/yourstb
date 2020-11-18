@@ -3,6 +3,7 @@ const route = express.Router();
 const mysql = require("mysql");
 const {ensureAuthenticateds} = require('../config/adminAuth');    //Login Authenticator
 const Excel = require('exceljs');
+const { start } = require('live-server');
 
 var success = [];
 
@@ -80,6 +81,12 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var packageOpted;
     var duration = req.body.duration;
     var totalBalance = req.body.totalBalance;
+    var startDate = req.body.startDate;
+
+
+    var parts =startDate.split('-');
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+
 
 
     var balance=0;
@@ -156,17 +163,19 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
                 
       var monthName = month[d.getMonth()];
       var dateExpiry = new Date();
-      dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+      dateExpiry.setDate(mydate.getDate() + (30 * duration));
       
-      console.log(results[0].dateExpiry);
+      // console.log(results[0].dateExpiry);
 
       if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
-        let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+        // let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+        let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
         let listValues = {};
         for(var i =0; i<duration; i++){
             listValues[month[d.getMonth() + i]] = amount;
         }
         listValues['dateExpiry'] = dateExpiry;
+        listValues['datepaid'] = mydate;
        
         db.query(listPay,listValues, (err,results)=>{
           if(err){
@@ -178,7 +187,7 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
 
       let balancePay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
       let balanceValues = {};
-      console.log(balance);
+      // console.log(balance);
       if(balance > 0){
         balanceValues['status'] = 2;
         balanceValues['balance'] = balance;
