@@ -78,10 +78,26 @@
                               <label for="name">Name</label>
                               <input type="text" class="form-control" id="nameEdit" name="name"  required>
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                               <label for="address">Address</label>
                               <input type="text" class="form-control" id="addressEdit" name="address"  required>
-                          </div>
+                          </div> -->
+                          <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <select class="form-control" name="region" id="regionEdit" required>
+                                        <option value="">Select Region</option>
+                                        <% for(var i=0; i< regionList.length; i++){%>
+                                            <option value="<%=regionList[i].id%>"><%=regionList[i].region_name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" class="form-control" id="addressEdit" name="address" placeholder="Address Field" required>
+                                </div>
+                            </div>
+                        </div>
                           <div class="form-group">
                               <label for="mobile">Mobile</label>
                               <input type="text" class="form-control" id="mobileEdit" name="mobile" >
@@ -115,7 +131,7 @@
                       <th>Payment Date</th>
                       <th>Expiry Date</th>
                       <th>Edit</th>
-                      <th>Delete</th>
+                      <th>Suspend</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -128,7 +144,7 @@
                       <th>Payment Date</th>
                       <th>Expiry Date</th>
                       <th>Edit</th>
-                      <th>Delete</th>
+                      <th>Suspend</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -150,7 +166,7 @@
                            
                             <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>";
                              document.getElementById("stbEdit").value = "<%=results[i].Stb%>"; 
-                             document.getElementById("addressEdit").value = "<%=results[i].Address%>"; 
+                             document.getElementById("addressEdit").value = "<%=results[i].Address%>";
                              document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
                              document.getElementById("stb").value = "<%=results[i].Stb%>"; 
                              var r = confirm("Do you want to continue editing the customer record?");

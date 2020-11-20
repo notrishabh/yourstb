@@ -27,6 +27,7 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
     var region_id = req.params.region_id;
     let sql = `UPDATE infos SET ? WHERE Stb = "${req.body.stb}"`;
     let values = {
+        region_id : req.body.region,
         Name : req.body.name,
         Address : req.body.address,
         Mobile : req.body.mobile,
@@ -75,18 +76,23 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
     month[11] = "December";
   
     var monthName = month[d.getMonth()];
-    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND infos.suspended = 0`;
-    db.query(sql, (err,results)=>{
-        res.render('fullList/allRegions', {
-            user : req.user,
-            results : results,
-            region_id : region_id,
-            monthName : monthName,
-            success
+    let sqll = `SELECT * FROM region`;
+    db.query(sqll, (err,regionList)=>{
+        let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
+        FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND infos.suspended = 0`;
+        db.query(sql, (err,results)=>{
+            res.render('fullList/allRegions', {
+                user : req.user,
+                results : results,
+                region_id : region_id,
+                monthName : monthName,
+                regionList : regionList,
+                success
 
+            });
         });
     });
+   
 });
 
 route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
