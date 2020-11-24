@@ -49,6 +49,7 @@ db.connect((err)=>{
 app.use(session({
     secret : 'secret',
     cookie : { maxAge : 86400000},
+    rolling : true,
     resave : false,
     saveUninitialized : false
 }));
