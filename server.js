@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const MySQLStore = require('express-mysql-session')(session);
 
 
 require('./config/passport-config')(passport); //Passport Login location
@@ -29,13 +30,38 @@ app.use( express.static( "public" ) );
 // });
 
 //TESTING
-db = mysql.createConnection({
+// db = mysql.createConnection({
+//     host : 'localhost',
+//     user : 'root',
+//     password : '',
+//     database : 'ccn',
+//     multipleStatements : true
+// });
+
+var options = {
     host : 'localhost',
     user : 'root',
     password : '',
     database : 'ccn',
     multipleStatements : true
-});
+};
+
+db = mysql.createConnection(options);
+var sessionStore = new MySQLStore({
+    createDatabaseTable: true,
+    endConnectionOnClose: true,
+    connectionLimit: 1,
+    clearExpired: true,
+    charset: 'utf8mb4_bin',
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+}, db);
 
 db.connect((err)=>{
     if(!err){
@@ -46,12 +72,26 @@ db.connect((err)=>{
 
 
 //=================Passport Login Configuration========
+// app.use(session({
+//     secret : 'secret',
+//     cookie : { maxAge : 86400000},
+//     rolling : true,
+//     resave : false,
+//     saveUninitialized : false
+// }));
+app.set('trust proxy', 1)
 app.use(session({
-    secret : 'secret',
-    cookie : { maxAge : 86400000},
-    rolling : true,
-    resave : false,
-    saveUninitialized : false
+    secret: 'secreter',
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: {
+        maxAge: 1000*60*60*24,
+        secure: true,
+        sameSite: true,
+        httpOnly: false,
+
+    }
 }));
 
 app.use(passport.initialize());
