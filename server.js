@@ -47,21 +47,7 @@ var options = {
 };
 
 db = mysql.createConnection(options);
-var sessionStore = new MySQLStore({
-    createDatabaseTable: true,
-    endConnectionOnClose: true,
-    connectionLimit: 1,
-    clearExpired: true,
-    charset: 'utf8mb4_bin',
-    schema: {
-        tableName: 'sessions',
-        columnNames: {
-            session_id: 'session_id',
-            expires: 'expires',
-            data: 'data'
-        }
-    }
-}, db);
+
 
 db.connect((err)=>{
     if(!err){
@@ -79,6 +65,24 @@ db.connect((err)=>{
 //     resave : false,
 //     saveUninitialized : false
 // }));
+
+sessionStore = new MySQLStore({
+    createDatabaseTable: true,
+    endConnectionOnClose: true,
+    connectionLimit: 1,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000,
+    charset: 'utf8mb4_bin',
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+}, db);
 app.set('trust proxy', 1)
 app.use(session({
     secret: 'secreter',
@@ -87,9 +91,10 @@ app.use(session({
     store: sessionStore,
     cookie: {
         maxAge: 1000*60*60*24,
-        secure: true,
-        sameSite: true,
-        httpOnly: false,
+        //PRODUCTION
+        // secure: true,
+        // sameSite: true,
+        // httpOnly: false,
 
     }
 }));
