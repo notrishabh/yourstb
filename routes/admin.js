@@ -174,8 +174,12 @@ route.post('/settings', ensureAuthenticateds, (req,res)=>{
 
 route.get('/logout', (req,res)=>{
     req.logOut();
-    req.flash('success_msg', 'You have logged out');
-    res.redirect('/adminLogin');
+    req.session.destroy(() => {
+        res.clearCookie('connect.sid')
+        // req.flash('success_msg', 'You have logged out');
+        res.redirect('/adminLogin');
+    });
+    
 });
 
 

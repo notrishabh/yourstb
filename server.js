@@ -20,6 +20,7 @@ app.use(bodyparser.json()); //Body Parser for req.body
 app.set('view engine', 'ejs'); //EJS Configuration
 app.use( express.static( "public" ) );
 
+
 //============Database Connection==============
 //PRODUCTION
 // db = mysql.createConnection({
@@ -48,12 +49,50 @@ var options = {
 
 db = mysql.createConnection(options);
 
-
-db.connect((err)=>{
-    if(!err){
-        console.log("Database Connected");
+var sessionStore = new MySQLStore({
+    createDatabaseTable: true,
+    endConnectionOnClose: true,
+    // connectionLimit: 1,
+    clearExpired: true,
+    checkExpirationInterval: 1000*60*10,
+    expiration: 1000*60*60,
+    // charset: 'utf8mb4_bin',
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
     }
-});
+}, db);
+
+
+app.set('trust proxy', 1)
+app.use(session({
+    secret: 'secreter',
+    resave: false,
+    store: sessionStore,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+        maxAge: 1000*60*60,
+        //PRODUCTION
+        // secure: true,
+        // sameSite: true,
+        // httpOnly: false,
+
+    }
+}));
+
+
+
+
+// db.connect((err)=>{
+//     if(!err){
+//         console.log("Database Connected");
+//     }
+// });
 //==============================================
 
 
@@ -66,38 +105,9 @@ db.connect((err)=>{
 //     saveUninitialized : false
 // }));
 
-sessionStore = new MySQLStore({
-    createDatabaseTable: true,
-    endConnectionOnClose: true,
-    connectionLimit: 1,
-    clearExpired: true,
-    checkExpirationInterval: 900000,
-    expiration: 86400000,
-    charset: 'utf8mb4_bin',
-    schema: {
-        tableName: 'sessions',
-        columnNames: {
-            session_id: 'session_id',
-            expires: 'expires',
-            data: 'data'
-        }
-    }
-}, db);
-app.set('trust proxy', 1)
-app.use(session({
-    secret: 'secreter',
-    resave: false,
-    saveUninitialized: false,
-    store: sessionStore,
-    cookie: {
-        maxAge: 1000*60*60*24,
-        //PRODUCTION
-        // secure: true,
-        // sameSite: true,
-        // httpOnly: false,
 
-    }
-}));
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
