@@ -66,6 +66,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
         res.send(err)
       }
 
+
         res.render('unpaidList/allRegions', {
             user : req.user,
             results : results,
@@ -80,6 +81,7 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var amount;
     var packageOpted;
     var duration = req.body.duration;
+    duration = parseInt(duration);
     var totalBalance = req.body.totalBalance;
     var startDate = req.body.startDate;
 
@@ -164,6 +166,8 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       var monthName = month[d.getMonth()];
       var dateExpiry = new Date();
       dateExpiry.setDate(mydate.getDate() + (30 * duration));
+      dateExpiry.setMonth(mydate.getMonth() + duration);
+
       
       // console.log(results[0].dateExpiry);
 
