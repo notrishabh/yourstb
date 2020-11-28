@@ -182,9 +182,11 @@
                       for(var i = 0;i < results.length;i++) { 
                         var d = new Date();
                         var totalBalance;
+                        var styler="black";
                         if(results[i].balance != 0){
                           if(results[i].dateExpiry > d || results[i].Amount != 0){
                             totalBalance = results[i].balance;
+                            styler="red"
                           }else{
                             totalBalance = results[i].PrevAmount + 2 * results[i].balance;
                           }
@@ -193,7 +195,7 @@
                         }
                         %>
 
-                        <tr>
+                        <tr style="color:<%=styler%>">
                           <td><%= results[i].Name %></td>
                           <td><%= results[i].Address %></td>
                           <td><%= results[i].Mobile %></td>
