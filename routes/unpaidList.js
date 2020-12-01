@@ -88,7 +88,7 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
 
     var parts =startDate.split('-');
     var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
-
+    var vardate = new Date(parts[0], parts[1] - 1, parts[2]); 
 
 
     var balance=0;
@@ -164,19 +164,41 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       month[23] = "December";
                 
       var monthName = month[d.getMonth()];
-      var dateExpiry = new Date();
-      dateExpiry.setDate(mydate.getDate() + (30 * duration));
-      dateExpiry.setMonth(mydate.getMonth() + duration);
+      var dateExpiry = vardate;
+      // console.log("mydate",mydate);
 
-      
-      // console.log(results[0].dateExpiry);
+      dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+      // console.log("dateexpiry before month",dateExpiry);
+      // dateExpiry.setMonth(dateExpiry.getMonth() + duration);
+      // console.log("dateexpiry after month",dateExpiry);
+
+      // console.log("mydate after dateexpiry",mydate);
+
+
+
+    //   function daysInMonth (month, year) {
+    //     return new Date(year, month, 0).getDate();
+    // }
+
+      // console.log(getDaysInMonth(d.getMonth(), d.getFullYear()));
+      // console.log(daysInMonth(mydate.getMonth()+1, mydate.getFullYear()));
+      // if(daysInMonth(mydate.getMonth()+1, mydate.getFullYear()) == 31){
+      //   dateExpiry.setMonth(mydate.getMonth() + duration-1);
+      // }
+
+
+      // console.log(d);
+      // console.log(mydate.getDate() < d.getDate());
+      // console.log(mydate);
+      // console.log(dateExpiry);
+      // console.log(mydate.getDate());
 
       if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
         // let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
         let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
         let listValues = {};
         for(var i =0; i<duration; i++){
-            listValues[month[d.getMonth() + i]] = amount;
+            listValues[month[mydate.getMonth() + i]] = amount;
         }
         listValues['dateExpiry'] = dateExpiry;
         listValues['datepaid'] = mydate;
