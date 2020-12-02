@@ -40,6 +40,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
 
   var parts =startDate.split('-');
   var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+  var vardate = new Date(parts[0], parts[1] - 1, parts[2]); 
 
 
   
@@ -111,14 +112,14 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     month[23] = "December";
               
     var monthName = month[d.getMonth()];
-    var dateExpiry = new Date();
-    dateExpiry.setDate(mydate.getDate() + (30 * duration));
+    var dateExpiry = vardate;
+    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
 
 
     let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
     let listValues = {};
     for(var i =0; i<duration; i++){
-        listValues[month[d.getMonth() + i]] = amount;
+        listValues[month[mydate.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
     listValues['datePaid'] = mydate;
