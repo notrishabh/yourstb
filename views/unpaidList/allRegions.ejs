@@ -205,13 +205,13 @@
                           <td>
                             <button class="btn btn-primary" 
                             onclick="document.getElementById('payForm').style.display = 'block'; 
-                            document.getElementById('Stb').value = '<%=results[i].Stb%>';
-                            document.getElementById('customField').value = '<%= totalBalance %>';
-                            document.getElementById('totalBalance').value = '<%= totalBalance %>';
-                            document.getElementById('name').value = '<%= results[i].Name %>';
-                            document.getElementById('address').value = '<%= results[i].Address %>';
-                            document.getElementById('mobile').value = '<%= results[i].Mobile %>';
-                            document.getElementById('stbDisp').value = '<%= results[i].Stb %>';"
+                            document.getElementById('Stb').value = `<%=results[i].Stb%>`;
+                            document.getElementById('customField').value = `<%= totalBalance %>`;
+                            document.getElementById('totalBalance').value = `<%= totalBalance %>`;
+                            document.getElementById('name').value = `<%= results[i].Name %>`;
+                            document.getElementById('address').value = `<%= results[i].Address %>`;
+                            document.getElementById('mobile').value = `<%= results[i].Mobile %>`;
+                            document.getElementById('stbDisp').value = `<%= results[i].Stb %>`;"
                             ><i class="fas fa-money-bill-wave"></i></button>
                           </td>
                         </tr>
