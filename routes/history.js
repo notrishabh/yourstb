@@ -16,16 +16,22 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
 
 
 route.post("/",ensureAuthenticateds, (req, res) => {
-    stb = req.body.stb;
-    let sql = `SELECT * FROM infos WHERE stb = "${stb}"`;
+    var stb = req.body.stb;
+    // let sql = `SELECT * FROM infos WHERE stb = "${stb}"`;
+    let sql = `SELECT * FROM all_payment WHERE stb = "${stb}"`;
     db.query(sql, (err, results) => {
-      res.render("history", {
+      let sql = `SELECT SUM(Amount) AS sum FROM all_payment WHERE stb = "${stb}"`;
+      db.query(sql, (err, sumTotal) => {        
+        res.render("history", {
         user: req.user,
-        results: results[0],
+        results: results,
+        sumTotal: sumTotal,
         displayDetails: "block",
         noResults: "none",
         success
       });
+      })
+      
     });
   });
 

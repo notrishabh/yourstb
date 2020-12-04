@@ -193,39 +193,59 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       // console.log(dateExpiry);
       // console.log(mydate.getDate());
 
-      if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
-        // let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
-        let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
-        let listValues = {};
-        for(var i =0; i<duration; i++){
-            listValues[month[mydate.getMonth() + i]] = amount;
-        }
-        listValues['dateExpiry'] = dateExpiry;
-        listValues['datepaid'] = mydate;
+      // if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
+      //   let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
+      //   let listValues = {};
+      //   for(var i =0; i<duration; i++){
+      //       listValues[month[mydate.getMonth() + i]] = amount;
+      //   }
+      //   listValues['dateExpiry'] = dateExpiry;
+      //   listValues['datepaid'] = mydate;
        
-        db.query(listPay,listValues, (err,results)=>{
-          if(err){
-            console.log(err);
-          }
-        });
+      //   db.query(listPay,listValues, (err,results)=>{
+      //     if(err){
+      //       console.log(err);
+      //     }
+      //   });
+      // }
+
+      let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
+      let listValues = {};
+      for(var i =0; i<duration; i++){
+          listValues[month[mydate.getMonth() + i]] = amount;
       }
+      listValues['dateExpiry'] = dateExpiry;
+      listValues['datepaid'] = mydate;
 
-
-      let balancePay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
-      let balanceValues = {};
-      // console.log(balance);
       if(balance > 0){
-        balanceValues['status'] = 2;
-        balanceValues['balance'] = balance;
+        listValues['status'] = 2;
+        listValues['balance'] = balance;
       }else{
-        balanceValues['status'] = 1;
-        balanceValues['balance'] = 0;
+        listValues['status'] = 1;
+        listValues['balance'] = 0;
       }
-      db.query(balancePay,balanceValues, (err,results)=>{
+      db.query(listPay,listValues, (err,results)=>{
         if(err){
           console.log(err);
         }
       });
+
+
+      // let balancePay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
+      // let balanceValues = {};
+      // // console.log(balance);
+      // if(balance > 0){
+      //   balanceValues['status'] = 2;
+      //   balanceValues['balance'] = balance;
+      // }else{
+      //   balanceValues['status'] = 1;
+      //   balanceValues['balance'] = 0;
+      // }
+      // db.query(balancePay,balanceValues, (err,results)=>{
+      //   if(err){
+      //     console.log(err);
+      //   }
+      // });
 
 
   
@@ -239,6 +259,7 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
           Stb : results[0].Stb,
           Amount : totalAmount,
           Mode : 'Offline',
+          dateStart : mydate,
           dateExpiry : dateExpiry
       };
       db.query(all_payment, all_values, (err,results)=>{

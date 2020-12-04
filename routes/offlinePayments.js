@@ -145,6 +145,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         Stb : results[0].Stb,
         Amount : totalAmount,
         Mode : 'Offline',
+        dateStart : mydate,
         dateExpiry : dateExpiry
     };
     db.query(all_payment, all_values, (err,results)=>{

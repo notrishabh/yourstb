@@ -184,10 +184,12 @@
                         var d = new Date();
                         var totalBalance;
                         var styler="black";
+                        var bton = "inline";
                         if(results[i].balance != 0){
                           if(results[i].dateExpiry > d){
                             totalBalance = results[i].balance;
                             styler="red";
+                            bton="none";
                           }else{
                             totalBalance = results[i].PrevAmount + 2 * results[i].balance;
                           }
@@ -203,7 +205,7 @@
                           <td><%= results[i].Stb %></td>
                           <td><%= totalBalance %></td>
                           <td>
-                            <button class="btn btn-primary" 
+                            <button class="btn btn-primary" style="display: <%=bton%>;"
                             onclick="document.getElementById('payForm').style.display = 'block'; 
                             document.getElementById('Stb').value = `<%=results[i].Stb%>`;
                             document.getElementById('customField').value = `<%= totalBalance %>`;
