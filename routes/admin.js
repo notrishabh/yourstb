@@ -189,6 +189,7 @@ route.use('/fullList', require('./fullList'));
 route.use('/suspendedList', require('./suspendedList'));
 route.use('/balanceList', require('./balanceList'));
 route.use('/unpaidList', require('./unpaidList'));
+route.use('/paidList', require('./paidList'));
 route.use('/worker', require('./worker'));
 route.use('/newStb', require('./newStb'));
 route.use('/region', require('./region'));
