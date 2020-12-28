@@ -30,33 +30,23 @@ app.use( express.static( "public" ) );
 //     database : process.env.DB_DB
 // });
 
-//TESTING
-// db = mysql.createConnection({
-//     host : 'localhost',
-//     user : 'root',
-//     password : '',
-//     database : 'ccn',
-//     multipleStatements : true
-// });
 
-var options = {
+db = mysql.createPool({
+    connectionLimit : 20,
     host : 'localhost',
     user : 'root',
     password : '',
     database : 'ccn',
     multipleStatements : true
-};
-
-db = mysql.createConnection(options);
+});
 
 var sessionStore = new MySQLStore({
     createDatabaseTable: true,
     endConnectionOnClose: true,
-    // connectionLimit: 1,
-    clearExpired: true,
+    connectionLimit: 20,
     checkExpirationInterval: 1000*60*10,
     expiration: 1000*60*60,
-    // charset: 'utf8mb4_bin',
+    clearExpired: true,
     schema: {
         tableName: 'sessions',
         columnNames: {
@@ -74,7 +64,7 @@ app.use(session({
     resave: false,
     store: sessionStore,
     saveUninitialized: false,
-    rolling: true,
+    // rolling: true,
     cookie: {
         maxAge: 1000*60*60,
         //PRODUCTION
@@ -88,22 +78,10 @@ app.use(session({
 
 
 
-// db.connect((err)=>{
-//     if(!err){
-//         console.log("Database Connected");
-//     }
-// });
 //==============================================
 
 
 //=================Passport Login Configuration========
-// app.use(session({
-//     secret : 'secret',
-//     cookie : { maxAge : 86400000},
-//     rolling : true,
-//     resave : false,
-//     saveUninitialized : false
-// }));
 
 
 
