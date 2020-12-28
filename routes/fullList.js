@@ -44,13 +44,29 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
     });
 });
 
-route.post('/delete/:region_id',ensureAuthenticateds,(req,res)=>{
+route.post('/suspend/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var stb = req.body.Stb;
     let sql = `UPDATE infos SET suspended = 1 WHERE Stb="${stb}"`;
     db.query(sql, (err,results)=>{
       if(!err){
         req.flash('error_msg', 'STB Suspended Successfully!');
+        res.redirect("/adminPanel/fullList/" + region_id);
+    }
+    });
+
+});
+
+route.post('/remove/:region_id',ensureAuthenticateds,(req,res)=>{
+    var region_id = req.params.region_id;
+    var stb = req.body.Stb;
+    let sql = `DELETE FROM infos WHERE Stb="${stb}"`;
+    db.query(sql, (err,results)=>{
+      if(!err){
+        req.flash('error_msg', 'STB Removed Successfully!');
+        res.redirect("/adminPanel/fullList/" + region_id);
+    }else{
+        req.flash('error_msg', 'ERROR');
         res.redirect("/adminPanel/fullList/" + region_id);
     }
     });

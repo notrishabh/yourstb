@@ -133,6 +133,7 @@
                       <th>Expiry Date</th>
                       <th>Edit</th>
                       <th>Suspend</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -146,6 +147,7 @@
                       <th>Expiry Date</th>
                       <th>Edit</th>
                       <th>Suspend</th>
+                      <th>Delete</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -180,10 +182,18 @@
                            
                            </td>
                            <td>
-                            <form action="/adminPanel/fullList/delete/<%=region_id%>" method="POST">
+                            <form action="/adminPanel/fullList/suspend/<%=region_id%>" method="POST">
                               <div>
                                 <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
                                 <button class="btn btn-primary" onclick=confirmBtn() id="delBtn"><i class="fas fa-minus-circle"></i></button>
+                              </div>
+                            </form>
+                          </td>
+                           <td>
+                            <form action="/adminPanel/fullList/remove/<%=region_id%>" method="POST">
+                              <div>
+                                <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
+                                <button class="btn btn-primary" onclick=removeBtn() id="remBtn"><i class="fas fa-trash"></i></button>
                               </div>
                             </form>
                           </td>
@@ -233,6 +243,14 @@
                         document.getElementById('delBtn').type = "submit";
                     }else{
                         document.getElementById('delBtn').type = "reset";
+                    }
+                }
+              function removeBtn(){
+                    var r = confirm("Are you sure you want to permanently remove the STB?");
+                    if(r==true){
+                        document.getElementById('remBtn').type = "submit";
+                    }else{
+                        document.getElementById('remBtn').type = "reset";
                     }
                 }
             </script>
