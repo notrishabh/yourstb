@@ -75,6 +75,7 @@
     
                         <form action="/adminPanel/fullList/edit/<%=region_id%>" method="POST">
                           <input type="hidden" id="stb" name="stb">
+                          <input type="hidden" id="cid" name="cid">
                           <div class="form-group">
                               <label for="name">Name</label>
                               <input type="text" class="form-control" id="nameEdit" name="name"  required>
@@ -169,6 +170,7 @@
                            
                             <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>";
                              document.getElementById("stbEdit").value = "<%=results[i].Stb%>"; 
+                             document.getElementById("cid").value = "<%=results[i].cid%>"; 
                              document.getElementById("addressEdit").value = "<%=results[i].Address%>";
                              document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
                              document.getElementById("stb").value = "<%=results[i].Stb%>"; 
@@ -184,7 +186,7 @@
                            <td>
                             <form action="/adminPanel/fullList/suspend/<%=region_id%>" method="POST">
                               <div>
-                                <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
+                                <input type="hidden" name="cid" value="<%= results[i].cid %>">
                                 <button class="btn btn-primary" onclick=confirmBtn() id="delBtn"><i class="fas fa-minus-circle"></i></button>
                               </div>
                             </form>
@@ -192,7 +194,7 @@
                            <td>
                             <form action="/adminPanel/fullList/remove/<%=region_id%>" method="POST">
                               <div>
-                                <input type="hidden" name="Stb" value="<%= results[i].Stb %>">
+                                <input type="hidden" name="cid" value="<%= results[i].cid %>">
                                 <button class="btn btn-primary" onclick=removeBtn() id="remBtn"><i class="fas fa-trash"></i></button>
                               </div>
                             </form>

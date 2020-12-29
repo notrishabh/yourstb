@@ -25,7 +25,7 @@ route.get("/",ensureAuthenticateds,(req,res)=>{
 
 route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
     var region_id = req.params.region_id;
-    let sql = `UPDATE infos SET ? WHERE Stb = "${req.body.stb}"`;
+    let sql = `UPDATE infos SET ? WHERE cid = ${req.body.cid}`;
     let values = {
         region_id : req.body.region,
         Name : req.body.name,
@@ -46,8 +46,8 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
 
 route.post('/suspend/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
-    var stb = req.body.Stb;
-    let sql = `UPDATE infos SET suspended = 1 WHERE Stb="${stb}"`;
+    var cid = req.body.cid;
+    let sql = `UPDATE infos SET suspended = 1 WHERE cid=${cid}`;
     db.query(sql, (err,results)=>{
       if(!err){
         req.flash('error_msg', 'STB Suspended Successfully!');
@@ -59,8 +59,8 @@ route.post('/suspend/:region_id',ensureAuthenticateds,(req,res)=>{
 
 route.post('/remove/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
-    var stb = req.body.Stb;
-    let sql = `DELETE FROM infos WHERE Stb="${stb}"`;
+    var cid = req.body.cid;
+    let sql = `DELETE FROM infos WHERE cid=${cid}`;
     db.query(sql, (err,results)=>{
       if(!err){
         req.flash('error_msg', 'STB Removed Successfully!');
@@ -94,7 +94,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
     var monthName = month[d.getMonth()];
     let sqll = `SELECT * FROM region`;
     db.query(sqll, (err,regionList)=>{
-        let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
+        let sql = `SELECT region.region_name,infos.cid,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount,infos.datePaid,infos.dateExpiry 
         FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND infos.suspended = 0`;
         db.query(sql, (err,results)=>{
             res.render('fullList/allRegions', {
