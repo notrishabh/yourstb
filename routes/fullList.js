@@ -47,7 +47,7 @@ route.post("/edit/:region_id", ensureAuthenticateds, (req,res)=>{
 route.post('/suspend/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var cid = req.body.cid;
-    let sql = `UPDATE infos SET suspended = 1 WHERE cid=${cid}`;
+    let sql = `UPDATE infos SET suspended = 1 WHERE cid= "${cid}"`;
     db.query(sql, (err,results)=>{
       if(!err){
         req.flash('error_msg', 'STB Suspended Successfully!');
@@ -60,7 +60,7 @@ route.post('/suspend/:region_id',ensureAuthenticateds,(req,res)=>{
 route.post('/remove/:region_id',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var cid = req.body.cid;
-    let sql = `DELETE FROM infos WHERE cid=${cid}`;
+    let sql = `DELETE FROM infos WHERE cid = "${cid}"`;
     db.query(sql, (err,results)=>{
       if(!err){
         req.flash('error_msg', 'STB Removed Successfully!');
