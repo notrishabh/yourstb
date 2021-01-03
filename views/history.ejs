@@ -77,6 +77,21 @@
                     <p class="card-text"> Address : <%=results[0].Address%></p>
                     <p class="card-text">Mobile : <%=results[0].Mobile%></p>
                     <p class="card-text">Stb No. : <%=results[0].Stb%></p>
+                    <% if(status == 1){ %>
+                      <p class="card-text">Status : <span style="color: green;">Activated</span></p>
+                    <% }else if(status == 2){ %>
+                      <p class="card-text">Status : <span style="color: rgb(69, 154, 204);">Balance Due</span></p>
+                    <% }else{ %>
+                      <p class="card-text">Status : <span style="color: red;">Deactivated</span></p>
+                    <% }%>
+                    <% if(suspended){ %>
+                      <form class="form-inline" action="/adminPanel/history/unsuspend"  method="POST">
+                        <input type="hidden" name="stb" value="<%=results[0].Stb%>">
+                        <p><span style="color: red;font-size: 20px;">Suspended</span></p>
+
+                        <button onclick=confirmBtn() class="btn btn-secondary mb-3 ml-3" id="unsusp"><i class="fas fa-user-plus"></i> Unsuspend</button>
+                      </form>
+                   <% } %>
                     <h4 class="card-text text-gray-800">Total amount : <span style="color: green;"><%=sumTotal[0].sum%></span></h4>
                   </div>
                 </div>
@@ -151,6 +166,15 @@
             "searching" : false,
             "ordering" : false
         });
+
+        function confirmBtn(){
+            var r = confirm("Are you sure you want to unsuspend the STB?");
+            if(r==true){
+                document.getElementById('unsusp').type = "submit";
+            }else{
+                document.getElementById('unsusp').type = "reset";
+            }
+        }
     </script>
    
   </body>
