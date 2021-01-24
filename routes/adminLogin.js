@@ -24,11 +24,14 @@ route.post('/', (req,res, next)=>{
             failureFlash: true
         })(req,res,next);
     }else{
-        passport.authenticate('admin-local', {
-            successRedirect: '/adminPanel',
-            failureRedirect: '/adminLogin',
-            failureFlash: true
-        })(req,res,next);
+        req.session.save((err)=>{
+            passport.authenticate('admin-local', {
+                successRedirect: '/adminPanel',
+                failureRedirect: '/adminLogin',
+                failureFlash: true
+            })(req,res,next);
+        });
+  
     }
 });
 

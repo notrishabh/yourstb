@@ -72,7 +72,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
 route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
   var region_id = req.params.region_id;
   var amount;
-  var packageOpted;
+  // var packageOpted;
   var duration = req.body.duration;
 
   if(req.body.exampleField){
@@ -80,36 +80,36 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
   }else{
     amount = req.body.exampleRadios;
   }
-  if(amount == "153"){
-    packageOpted = "Basic";
-  } else if(amount == "275"){
-    packageOpted = "Silver";
-  }else if(amount == "360"){
-    packageOpted = "Gold";
-  }else if(amount == "454"){
-    packageOpted = "Diamond";
-  }else{
-    packageOpted = "Custom";
-  }
+  // if(amount == "153"){
+  //   packageOpted = "Basic";
+  // } else if(amount == "275"){
+  //   packageOpted = "Silver";
+  // }else if(amount == "360"){
+  //   packageOpted = "Gold";
+  // }else if(amount == "454"){
+  //   packageOpted = "Diamond";
+  // }else{
+  //   packageOpted = "Custom";
+  // }
 
   var totalAmount = amount * duration;
 
   db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-    let sql = `INSERT INTO offline_payment SET ?`;
-    let values = {
-      Name : results[0].Name,
-      Address : results[0].Address,
-      Mobile : results[0].Mobile,
-      Stb : results[0].Stb,
-      Amount : totalAmount,
-      packageOpted : packageOpted
-    };
-    db.query(sql, values, (err,results)=>{
-      if(!err){
-        req.flash('success_msg', 'Paid Successfully!');
-        res.redirect('/workerPanel/unpaidList/' + region_id);
-      }
-    });
+    // let sql = `INSERT INTO offline_payment SET ?`;
+    // let values = {
+    //   Name : results[0].Name,
+    //   Address : results[0].Address,
+    //   Mobile : results[0].Mobile,
+    //   Stb : results[0].Stb,
+    //   Amount : totalAmount,
+    //   packageOpted : packageOpted
+    // };
+    // db.query(sql, values, (err,results)=>{
+    //   if(!err){
+    //     req.flash('success_msg', 'Paid Successfully!');
+    //     res.redirect('/workerPanel/unpaidList/' + region_id);
+    //   }
+    // });
     var d = new Date();
     var month = new Array();
     month[0] = "January";
@@ -168,6 +168,10 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
         dateExpiry : dateExpiry
     };
     db.query(all_payment, all_values, (err,results)=>{
+      if(!err){
+        req.flash('success_msg', 'Paid Successfully!');
+        res.redirect('/workerPanel/unpaidList/' + region_id);
+      }
     });
 
 

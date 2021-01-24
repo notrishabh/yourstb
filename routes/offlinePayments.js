@@ -31,7 +31,7 @@ route.post("/",ensureAuthenticateds, (req, res) => {
 
 route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var amount;
-  var packageOpted;
+  // var packageOpted;
   var duration = req.body.duration;
   var balance;
 
@@ -53,37 +53,37 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   amount = req.body.exampleField;
 
  
-  if(amount == "153"){
-    packageOpted = "Basic";
-  } else if(amount == "275"){
-    packageOpted = "Silver";
-  }else if(amount == "360"){
-    packageOpted = "Gold";
-  }else if(amount == "454"){
-    packageOpted = "Diamond";
-  }else{
-    packageOpted = "Custom";
-  }
+  // if(amount == "153"){
+  //   packageOpted = "Basic";
+  // } else if(amount == "275"){
+  //   packageOpted = "Silver";
+  // }else if(amount == "360"){
+  //   packageOpted = "Gold";
+  // }else if(amount == "454"){
+  //   packageOpted = "Diamond";
+  // }else{
+  //   packageOpted = "Custom";
+  // }
 
   var totalAmount = amount * duration;
 
 
   db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-    let sql = `INSERT INTO offline_payment SET ?`;
-    let values = {
-      Name : results[0].Name,
-      Address : results[0].Address,
-      Mobile : results[0].Mobile,
-      Stb : results[0].Stb,
-      Amount : totalAmount,
-      packageOpted : packageOpted
-    };
-    db.query(sql, values, (err,results)=>{
-      if(!err){
-        req.flash('success_msg', 'Saved Successfully!');
-        res.redirect('/adminPanel/offlinePayments');
-      }
-    });
+    // let sql = `INSERT INTO offline_payment SET ?`;
+    // let values = {
+    //   Name : results[0].Name,
+    //   Address : results[0].Address,
+    //   Mobile : results[0].Mobile,
+    //   Stb : results[0].Stb,
+    //   Amount : totalAmount,
+    //   packageOpted : packageOpted
+    // };
+    // db.query(sql, values, (err,results)=>{
+    //   if(!err){
+    //     req.flash('success_msg', 'Saved Successfully!');
+    //     res.redirect('/adminPanel/offlinePayments');
+    //   }
+    // });
     var d = new Date();
     var month = new Array();
     month[0] = "January";
@@ -145,10 +145,15 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         Stb : results[0].Stb,
         Amount : totalAmount,
         Mode : 'Offline',
+        validity : duration,
         dateStart : mydate,
         dateExpiry : dateExpiry
     };
     db.query(all_payment, all_values, (err,results)=>{
+      if(!err){
+        req.flash('success_msg', 'Saved Successfully!');
+        res.redirect('/adminPanel/offlinePayments');
+      }
     });
 
 

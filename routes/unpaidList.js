@@ -82,7 +82,7 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
 route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var amount;
-    var packageOpted;
+    // var packageOpted;
     var duration = req.body.duration;
     duration = parseInt(duration);
     var totalBalance = req.body.totalBalance;
@@ -105,17 +105,17 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
 
     amount = req.body.exampleField;
 
-    if(amount == "153"){
-      packageOpted = "Basic";
-    } else if(amount == "275"){
-      packageOpted = "Silver";
-    }else if(amount == "360"){
-      packageOpted = "Gold";
-    }else if(amount == "454"){
-      packageOpted = "Diamond";
-    }else{
-      packageOpted = "Custom";
-    }
+    // if(amount == "153"){
+    //   packageOpted = "Basic";
+    // } else if(amount == "275"){
+    //   packageOpted = "Silver";
+    // }else if(amount == "360"){
+    //   packageOpted = "Gold";
+    // }else if(amount == "454"){
+    //   packageOpted = "Diamond";
+    // }else{
+    //   packageOpted = "Custom";
+    // }
 
     // if(amount < totalBalance){
     //   balance += amount - totalBalance;
@@ -124,21 +124,21 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var totalAmount = amount * duration;
 
     db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-      let sql = `INSERT INTO offline_payment SET ?`;
-      let values = {
-        Name : results[0].Name,
-        Address : results[0].Address,
-        Mobile : results[0].Mobile,
-        Stb : results[0].Stb,
-        Amount : totalAmount,
-        packageOpted : packageOpted
-      };
-      db.query(sql, values, (err,results)=>{
-        if(!err){
-          req.flash('success_msg', 'Paid Successfully!');
-          res.redirect('/adminPanel/unpaidList/' + region_id);
-        }
-      });
+      // let sql = `INSERT INTO offline_payment SET ?`;
+      // let values = {
+      //   Name : results[0].Name,
+      //   Address : results[0].Address,
+      //   Mobile : results[0].Mobile,
+      //   Stb : results[0].Stb,
+      //   Amount : totalAmount,
+      //   packageOpted : packageOpted
+      // };
+      // db.query(sql, values, (err,results)=>{
+      //   if(!err){
+      //     req.flash('success_msg', 'Paid Successfully!');
+      //     res.redirect('/adminPanel/unpaidList/' + region_id);
+      //   }
+      // });
       var d = new Date();
       var month = new Array();
       month[0] = "January";
@@ -168,50 +168,9 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
                 
       var monthName = month[d.getMonth()];
       var dateExpiry = vardate;
-      // console.log("mydate",mydate);
 
       dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
-      // console.log("dateexpiry before month",dateExpiry);
-      // dateExpiry.setMonth(dateExpiry.getMonth() + duration);
-      // console.log("dateexpiry after month",dateExpiry);
-
-      // console.log("mydate after dateexpiry",mydate);
-
-
-
-    //   function daysInMonth (month, year) {
-    //     return new Date(year, month, 0).getDate();
-    // }
-
-      // console.log(getDaysInMonth(d.getMonth(), d.getFullYear()));
-      // console.log(daysInMonth(mydate.getMonth()+1, mydate.getFullYear()));
-      // if(daysInMonth(mydate.getMonth()+1, mydate.getFullYear()) == 31){
-      //   dateExpiry.setMonth(mydate.getMonth() + duration-1);
-      // }
-
-
-      // console.log(d);
-      // console.log(mydate.getDate() < d.getDate());
-      // console.log(mydate);
-      // console.log(dateExpiry);
-      // console.log(mydate.getDate());
-
-      // if(results[0].dateExpiry < d || results[0].dateExpiry == '0000-00-00 00:00:00'){
-      //   let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
-      //   let listValues = {};
-      //   for(var i =0; i<duration; i++){
-      //       listValues[month[mydate.getMonth() + i]] = amount;
-      //   }
-      //   listValues['dateExpiry'] = dateExpiry;
-      //   listValues['datepaid'] = mydate;
-       
-      //   db.query(listPay,listValues, (err,results)=>{
-      //     if(err){
-      //       console.log(err);
-      //     }
-      //   });
-      // }
-
+      
       let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
       let listValues = {};
       for(var i =0; i<duration; i++){
@@ -262,10 +221,17 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
           Stb : results[0].Stb,
           Amount : totalAmount,
           Mode : 'Offline',
+          validity : duration,
           dateStart : mydate,
           dateExpiry : dateExpiry
       };
       db.query(all_payment, all_values, (err,results)=>{
+        req.session.save(function(err){
+            req.flash('success_msg', 'Paid Successfully!');
+            res.redirect('/adminPanel/unpaidList/' + region_id);
+
+        });
+
       });
   
   
