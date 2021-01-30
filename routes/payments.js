@@ -2,6 +2,8 @@ const express = require("express");
 const route = express.Router();
 const mysql = require("mysql");
 const { ensureAuthenticateds } = require("../config/adminAuth"); //Login Authenticator
+const Excel = require('exceljs');
+
 
 
 
@@ -62,6 +64,65 @@ route.get("/thisMonth", ensureAuthenticateds, (req, res) => {
     });
   });
 });
+
+route.get('/thisMonth/download', ensureAuthenticateds,(req,res)=>{
+  var d = new Date();
+  var month = new Array();
+  month[0] = "January";
+  month[1] = "February";
+  month[2] = "March";
+  month[3] = "April";
+  month[4] = "May";
+  month[5] = "June";
+  month[6] = "July";
+  month[7] = "August";
+  month[8] = "September";
+  month[9] = "October";
+  month[10] = "November";
+  month[11] = "December";
+
+  var monthName = month[d.getMonth()];
+  var monthNumber = d.getMonth() + 1;
+
+
+
+  const workbook = new Excel.Workbook();
+  const worksheet = workbook.addWorksheet('records');
+  worksheet.views = [
+      {state: 'frozen', ySplit: 1, activeCell: 'A1'}
+  ];
+  worksheet.columns = [
+      { header: 'Name', key: 'Name', width: 32 },
+      { header: 'Address', key: 'Address', width: 30 },
+      { header: 'Stb', key: 'Stb', width: 15},
+      { header: 'Mobile', key: 'Mobile', width: 15 },
+      { header: 'Amount', key: 'Amount', width: 10 },
+      { header: 'Date Paid', key: 'datePaid', width: 30 },
+      { header: 'Validity', key: 'validity', width: 10 },
+      { header: 'Date Start', key: 'dateStart', width: 30 },
+      { header: 'Date Expiry', key: 'dateExpiry', width: 30 },
+  ];
+  let sql = `SELECT Name, Address, Mobile, Stb, Amount, datePaid, validity, dateStart, dateExpiry FROM all_payment WHERE month(datePaid) = "${monthNumber}" ORDER BY id DESC`;
+  db.query(sql, (err,results)=>{
+      results.forEach((result)=>{
+          var data = JSON.parse(JSON.stringify(result));
+          worksheet.addRow(data);
+      });
+      sendWorkbook(workbook,res);
+  })
+});
+
+
+async function sendWorkbook(workbook, response) { 
+
+      var fileName = `ThisMonth.xlsx`;
+      response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+  
+       await workbook.xlsx.write(response);
+  
+      response.end();
+}
 
 route.get('/thisYear', ensureAuthenticateds, (req,res)=>{
     var d = new Date();

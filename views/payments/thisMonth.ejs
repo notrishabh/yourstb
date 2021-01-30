@@ -48,8 +48,17 @@
       
               <!-- Begin Page Content -->
               <div class="container-fluid">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <h1 class="h4 mb-4 text-gray-800">Payments Recieved in <%= month %></h1>
+                  </div>
+                  <div class="col-md-2 offset-md-6">
+                    <div class="row align-items-center">
+                      <a href="/adminPanel/payments/thisMonth/download" class="btn btn-primary mb-3 p-2">Download <i class="fas fa-arrow-circle-down"></i></a>
+                    </div>
+                  </div>
+                </div>
 
-                <h1 class="h4 mb-4 text-gray-800">Payments Recieved in <%= month %></h1>
 
                           <!-- DataTales Example -->
           <div class="card shadow mb-4">
