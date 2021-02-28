@@ -33,6 +33,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var amount;
   // var packageOpted;
   var duration = req.body.duration;
+  duration = parseInt(duration);
   var balance;
 
   var startDate = req.body.startDate;
@@ -113,7 +114,9 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
               
     var monthName = month[d.getMonth()];
     var dateExpiry = vardate;
-    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+    // dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+    dateExpiry.setMonth(dateExpiry.getMonth() + duration);
+
 
 
     let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;

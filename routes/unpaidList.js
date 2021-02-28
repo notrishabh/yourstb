@@ -169,7 +169,9 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       var monthName = month[d.getMonth()];
       var dateExpiry = vardate;
 
-      dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+      // dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+      dateExpiry.setMonth(dateExpiry.getMonth() + duration);
+
       
       let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
       let listValues = {};
