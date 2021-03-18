@@ -126,7 +126,8 @@
                       <th>Mobile</th>
                       <th>Region</th>
                       <th>Complaints Fixed</th>
-                      <th>Password</th>
+                      <th>No. Of Payments</th>
+                      <th>Total Amount Paid</th>
                       <th>Edit</th>
                       <th>Delete</th>
                     </tr>
@@ -138,7 +139,8 @@
                         <th>Mobile</th>
                         <th>Region</th>
                         <th>Complaints Fixed</th>
-                        <th>Password</th>
+                        <th>No. Of Payments</th>
+                        <th>Total Amount Paid</th>  
                         <th>Edit</th>
                         <th>Delete</th>  
                       </tr>
@@ -154,7 +156,8 @@
                           <td><%= results[i].Mobile %></td>
                           <td><%= results[i].Region %></td>
                           <td><%= results[i].fixedComplaints %></td>
-                          <td><%= results[i].password %></td>
+                          <td><%= results[i].noOfPayments %></td>
+                          <td><%= results[i].paymentAmount %></td>
                           <td>
                            
                            <button onclick='document.getElementById("nameEdit").value = "<%=results[i].Name%>";
@@ -162,7 +165,7 @@
                             document.getElementById("regionEdit").value = "<%=results[i].Region%>"; 
                             document.getElementById("mobileEdit").value = "<%=results[i].Mobile%>"; 
                             document.getElementById("id").value = "<%=results[i].id%>"; 
-                            var r = confirm("The fixed complaints will be reset, Do you want to continue?");
+                            var r = confirm("Do you want to continue editing the worker record?");
                             if(r==true){
                                 document.getElementById("editForm").style.display="block";
                             }else{

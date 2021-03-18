@@ -66,7 +66,7 @@ route.post('/edit',ensureAuthenticateds,(req,res)=>{
         password : hash,
         Mobile : req.body.mobile,
         Region : req.body.region,
-        fixedComplaints : 0
+        // fixedComplaints : 0
     };
     db.query(sql,values, (err,results)=>{
       if(!err){

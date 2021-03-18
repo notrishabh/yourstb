@@ -82,7 +82,6 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
 route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     var region_id = req.params.region_id;
     var amount;
-    // var packageOpted;
     var duration = req.body.duration;
     duration = parseInt(duration);
     var totalBalance = req.body.totalBalance;
@@ -105,40 +104,11 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
 
     amount = req.body.exampleField;
 
-    // if(amount == "153"){
-    //   packageOpted = "Basic";
-    // } else if(amount == "275"){
-    //   packageOpted = "Silver";
-    // }else if(amount == "360"){
-    //   packageOpted = "Gold";
-    // }else if(amount == "454"){
-    //   packageOpted = "Diamond";
-    // }else{
-    //   packageOpted = "Custom";
-    // }
-
-    // if(amount < totalBalance){
-    //   balance += amount - totalBalance;
-    // }
 
     var totalAmount = amount * duration;
 
     db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-      // let sql = `INSERT INTO offline_payment SET ?`;
-      // let values = {
-      //   Name : results[0].Name,
-      //   Address : results[0].Address,
-      //   Mobile : results[0].Mobile,
-      //   Stb : results[0].Stb,
-      //   Amount : totalAmount,
-      //   packageOpted : packageOpted
-      // };
-      // db.query(sql, values, (err,results)=>{
-      //   if(!err){
-      //     req.flash('success_msg', 'Paid Successfully!');
-      //     res.redirect('/adminPanel/unpaidList/' + region_id);
-      //   }
-      // });
+
       var d = new Date();
       var month = new Array();
       month[0] = "January";
@@ -169,7 +139,6 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       var monthName = month[d.getMonth()];
       var dateExpiry = vardate;
 
-      // dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
       dateExpiry.setMonth(dateExpiry.getMonth() + duration);
 
       
@@ -195,21 +164,6 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
       });
 
 
-      // let balancePay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
-      // let balanceValues = {};
-      // // console.log(balance);
-      // if(balance > 0){
-      //   balanceValues['status'] = 2;
-      //   balanceValues['balance'] = balance;
-      // }else{
-      //   balanceValues['status'] = 1;
-      //   balanceValues['balance'] = 0;
-      // }
-      // db.query(balancePay,balanceValues, (err,results)=>{
-      //   if(err){
-      //     console.log(err);
-      //   }
-      // });
 
 
   

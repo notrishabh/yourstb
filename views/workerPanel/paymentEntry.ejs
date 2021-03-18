@@ -31,10 +31,22 @@
     />
 
     <script>
-      function fields(){
-        document.getElementById('customField').disabled = false;
+      function balanceFields(){
+       var bf =  document.getElementById('balanceField');
+       if(bf.disabled){
+         bf.disabled = false;
+       }else{
+         bf.disabled = true;
+       }
       }
     </script>
+    <style>
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
   </head>
 
   <body id="page-top">
@@ -65,7 +77,6 @@
                 <button type="submit" class="btn btn-primary mb-4 mx-3">Check Details</button>
               </form>
               
-
               <div style="display: <%=displayDetails%>;">
                 <div class="card shadow  mb-5 mt-3 bg-white rounded border-info">
                   <h5 class="card-header">Customer Details</h5>
@@ -79,57 +90,54 @@
                   </div>
                 </div>
                 
-                <div class="card mb-5">
+                <div class="card">
                   <h5 class="card-header">Payment Amount</h5>
                   <div class="card-body">
-                    <h5 class="card-title">Select Package or Custom</h5>
-
                     <form action="/workerPanel/paymentEntry/savePayment" method="POST">
                       <input type="hidden" name='Stb'  value="<%=results.Stb%>">
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="153" required>
-                        <label class="form-check-label" for="exampleRadios1">
-                          Basic Pack <i class="fas fa-rupee-sign"></i> 153
-                        </label>
-                      </div>
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="275">
-                        <label class="form-check-label" for="exampleRadios2">
-                          Silver Pack <i class="fas fa-rupee-sign"></i> 275
-                        </label>
-                      </div>
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="360">
-                        <label class="form-check-label" for="exampleRadios3">
-                          Gold Pack <i class="fas fa-rupee-sign"></i> 360
-                        </label>
-                      </div>
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios4" value="454">
-                        <label class="form-check-label" for="exampleRadios4">
-                          Diamond Pack <i class="fas fa-rupee-sign"></i> 454
-                        </label>
-                      </div>
-                      <div class="form-check mb-3">
-                        <div class="row align-items-center">
-                          <div class="col-4">
-                            <input type="radio" name="exampleRadios" id="customRadio" class="form-check-input" onclick=fields()>
-                            <label class="form-check-label" for="customRadio" >Custom Amount</label>
-                            <input type="text" class="ml-3" name="exampleField" id="customField"  disabled required /> 
+
+                        <div class="form-row mb-3 align-items-center">
+                          <div class="col-md-3">
+                            <label class="form-check-label" for="customField" >Amount</label>
+                            <input type="number" class="form-control" name="exampleField" id="customField"  required /> 
                           </div> 
-                            <div class="col-3">
-                              <select class="form-control" name="duration" required>
+                            <div class="col-md-4">
+                              <label class="form-check-label" for="duration" >Validity</label>
+                              <select class="form-control" name="duration" id="duration" required>
                                   <% for(var i=1; i<= 12 ; i++){%>
                                     <option value="<%=i%>"><%=i%> Months</option>
                                 <%}%>
                             </select>                        
                           </div>  
+                          <div class="col-md-5">
+                            <label class="form-check-label" for="startDate" >Start Date</label>
+                            <input type="date" name="startDate" max="3000-12-31" 
+                                   min="1000-01-01" class="form-control" id="startDate">
+                          </div>
                           
                         </div>
+                        
+                        
+                   
+                       
+                        <div class="row mb-3 align-items-center" id = "balanceFieldCol">
+                          <div class="form-check mb-3">
+                            <div class="col">
+
+                              <input class="form-check-input" type="checkbox" value="" id="customRadio" onclick=balanceFields()>
+                              <label class="form-check-label" for="customRadio" >Balance</label>
+                            </div>
+                          </div>
+                              <div class="col-3">
+                                <input type="number" class="form-control" name="balanceField" id="balanceField"  disabled required /> 
+                              </div>
+                          
+                        </div>
+                      
+                        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Pay</button>
                       </div>
-                        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Save</button>
-                      </div>
-                    </form>             
+                    </form>  
+
                   </div>
                   <% }else{ %>
                     <h5 style="color: red;">No Customer found.</h5>
@@ -148,6 +156,12 @@
     <%- include('../partials/vendor'); %>
 
     <!-- Page level custom scripts -->
+    <script>
+            var myDate = document.getElementById("startDate");
+            var date1 = new Date();
+            myDate.valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()));
+
+    </script>
    
   </body>
 </html>

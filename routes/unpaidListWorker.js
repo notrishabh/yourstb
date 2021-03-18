@@ -57,8 +57,10 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
     month[11] = "December";
   
     var monthName = month[d.getMonth()];
-    let sql = `SELECT region.region_name,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.${monthName} AS Amount 
-                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND status = 0 AND suspended = 0`;
+    var prevMonthName = month[d.getMonth() - 1];
+
+    let sql = `SELECT region.region_name,infos.status,infos.Name,infos.Address,infos.Mobile,infos.Stb,infos.dateExpiry,infos.${prevMonthName} AS PrevAmount,infos.balance,infos.${monthName} AS Amount 
+                FROM infos INNER JOIN region ON infos.region_id = region.id AND infos.region_id = ${region_id} AND status != 1 AND suspended = 0`;
     db.query(sql, (err,results)=>{
         res.render('workerPanel/allRegions', {
             user : req.user,
@@ -72,44 +74,33 @@ route.get('/:region_id',ensureAuthenticateds, (req,res)=>{
 route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
   var region_id = req.params.region_id;
   var amount;
-  // var packageOpted;
   var duration = req.body.duration;
+  duration = parseInt(duration);
+  var totalBalance = req.body.totalBalance;
+  var startDate = req.body.startDate;
 
-  if(req.body.exampleField){
-    amount = req.body.exampleField;
+
+  var parts =startDate.split('-');
+  var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+  var vardate = new Date(parts[0], parts[1] - 1, parts[2]); 
+
+
+  var balance=0;
+
+  if(req.body.balanceField){
+    balance += req.body.balanceField;
   }else{
-    amount = req.body.exampleRadios;
+    balance += 0;
   }
-  // if(amount == "153"){
-  //   packageOpted = "Basic";
-  // } else if(amount == "275"){
-  //   packageOpted = "Silver";
-  // }else if(amount == "360"){
-  //   packageOpted = "Gold";
-  // }else if(amount == "454"){
-  //   packageOpted = "Diamond";
-  // }else{
-  //   packageOpted = "Custom";
-  // }
+
+
+  amount = req.body.exampleField;
+
 
   var totalAmount = amount * duration;
 
   db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-    // let sql = `INSERT INTO offline_payment SET ?`;
-    // let values = {
-    //   Name : results[0].Name,
-    //   Address : results[0].Address,
-    //   Mobile : results[0].Mobile,
-    //   Stb : results[0].Stb,
-    //   Amount : totalAmount,
-    //   packageOpted : packageOpted
-    // };
-    // db.query(sql, values, (err,results)=>{
-    //   if(!err){
-    //     req.flash('success_msg', 'Paid Successfully!');
-    //     res.redirect('/workerPanel/unpaidList/' + region_id);
-    //   }
-    // });
+
     var d = new Date();
     var month = new Array();
     month[0] = "January";
@@ -138,23 +129,41 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
     month[23] = "December";
               
     var monthName = month[d.getMonth()];
-    var dateExpiry = new Date();
-    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+    var dateExpiry = vardate;
+
+    dateExpiry.setMonth(dateExpiry.getMonth() + duration);
 
     
-    let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+    let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
     let listValues = {};
     for(var i =0; i<duration; i++){
-        listValues[month[d.getMonth() + i]] = amount;
+        listValues[month[mydate.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
-    listValues['status'] = 1;
+    listValues['datepaid'] = mydate;
+
+    if(balance > 0){
+      listValues['status'] = 2;
+      listValues['balance'] = balance;
+    }else{
+      listValues['status'] = 1;
+      listValues['balance'] = 0;
+    }
     db.query(listPay,listValues, (err,results)=>{
       if(err){
         console.log(err);
       }
     });
-
+    let workersql = `UPDATE worker SET ? WHERE id = "${req.user.id}"`;
+    workerValues = {
+      noOfPayments : req.user.noOfPayments + 1,
+      paymentAmount : req.user.paymentAmount + totalAmount
+    };
+    db.query(workersql,workerValues, (err,worked)=>{
+      if(err){
+        console.log(err);
+      }
+    });
 
 
     let all_payment = `INSERT INTO all_payment SET ?`;
@@ -165,13 +174,17 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
         Stb : results[0].Stb,
         Amount : totalAmount,
         Mode : 'Offline',
+        validity : duration,
+        dateStart : mydate,
         dateExpiry : dateExpiry
     };
     db.query(all_payment, all_values, (err,results)=>{
-      if(!err){
-        req.flash('success_msg', 'Paid Successfully!');
-        res.redirect('/workerPanel/unpaidList/' + region_id);
-      }
+      req.session.save(function(err){
+          req.flash('success_msg', 'Paid Successfully!');
+          res.redirect('/workerPanel/unpaidList/' + region_id);
+
+      });
+
     });
 
 
@@ -179,85 +192,6 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
 
 });
 
-// route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
-//     var region_id = req.params.region_id;
-//     var amount;
-//     var packageOpted;
-//     if(req.body.exampleField){
-//       amount = req.body.exampleField;
-//     }else{
-//       amount = req.body.exampleRadios;
-//     }
-//     if(amount == "153"){
-//       packageOpted = "Basic";
-//     } else if(amount == "275"){
-//       packageOpted = "Silver";
-//     }else if(amount == "360"){
-//       packageOpted = "Gold";
-//     }else if(amount == "454"){
-//       packageOpted = "Diamond";
-//     }else{
-//       packageOpted = "Custom";
-//     }
-//     db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-//       let sql = `INSERT INTO offline_payment SET ?`;
-//       let values = {
-//         Name : results[0].Name,
-//         Address : results[0].Address,
-//         Mobile : results[0].Mobile,
-//         Stb : results[0].Stb,
-//         Amount : amount,
-//         packageOpted : packageOpted
-//       };
-//       db.query(sql, values, (err,results)=>{
-//         if(!err){
-//           req.flash('success_msg', 'Paid Successfully!');
-//           res.redirect('/workerPanel/unpaidList/' + region_id);
-//         }
-//       });
-//       var d = new Date();
-//       var month = new Array();
-//       month[0] = "January";
-//       month[1] = "February";
-//       month[2] = "March";
-//       month[3] = "April";
-//       month[4] = "May";
-//       month[5] = "June";
-//       month[6] = "July";
-//       month[7] = "August";
-//       month[8] = "September";
-//       month[9] = "October";
-//       month[10] = "November";
-//       month[11] = "December";
-                
-//       var monthName = month[d.getMonth()];
-//       var dateExpiry = new Date();
-//       dateExpiry.setDate(dateExpiry.getDate() + 30);
-  
-//       let listPay = `UPDATE infos SET ${monthName}="${amount}", datePaid = now(), ?  WHERE Stb = "${results[0].Stb}"`;
-//       let listValues = {
-//           dateExpiry : dateExpiry
-//       };
-//       db.query(listPay, listValues, (err,results)=>{
-//       });
-  
-//       let all_payment = `INSERT INTO all_payment SET ?`;
-//       let all_values = {
-//           Name : results[0].Name,
-//           Address : results[0].Address,
-//           Mobile : results[0].Mobile,
-//           Stb : results[0].Stb,
-//           Amount : amount,
-//           Mode : 'Offline',
-//           dateExpiry : dateExpiry
-//       };
-//       db.query(all_payment, all_values, (err,results)=>{
-//       });
-  
-  
-//     });
-  
-//   });
 
 // route.get('/:region/download', ensureAuthenticateds,(req,res)=>{
 //     var region = req.params.region;

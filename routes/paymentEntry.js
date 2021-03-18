@@ -28,48 +28,33 @@ route.post("/",ensureAuthenticateds, (req, res) => {
   });
 });
 
-
 route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   var amount;
-  // var packageOpted;
   var duration = req.body.duration;
+  duration = parseInt(duration);
+  var balance;
 
-  if(req.body.exampleField){
-    amount = req.body.exampleField;
+  var startDate = req.body.startDate;
+
+
+  var parts =startDate.split('-');
+  var mydate = new Date(parts[0], parts[1] - 1, parts[2]); 
+  var vardate = new Date(parts[0], parts[1] - 1, parts[2]); 
+
+
+  
+  if(req.body.balanceField){
+    balance = req.body.balanceField;
   }else{
-    amount = req.body.exampleRadios;
+    balance = 0;
   }
-  // if(amount == "153"){
-  //   packageOpted = "Basic";
-  // } else if(amount == "275"){
-  //   packageOpted = "Silver";
-  // }else if(amount == "360"){
-  //   packageOpted = "Gold";
-  // }else if(amount == "454"){
-  //   packageOpted = "Diamond";
-  // }else{
-  //   packageOpted = "Custom";
-  // }
+
+  amount = req.body.exampleField;
 
   var totalAmount = amount * duration;
 
 
   db.query(`SELECT * FROM infos WHERE Stb = "${req.body.Stb}"`,(err,results)=>{
-    // let sql = `INSERT INTO offline_payment SET ?`;
-    // let values = {
-    //   Name : results[0].Name,
-    //   Address : results[0].Address,
-    //   Mobile : results[0].Mobile,
-    //   Stb : results[0].Stb,
-    //   Amount : totalAmount,
-    //   packageOpted : packageOpted
-    // };
-    // db.query(sql, values, (err,results)=>{
-    //   if(!err){
-    //     req.flash('success_msg', 'Saved Successfully!');
-    //     res.redirect('/workerPanel/paymentEntry');
-    //   }
-    // });
     var d = new Date();
     var month = new Array();
     month[0] = "January";
@@ -98,18 +83,35 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
     month[23] = "December";
               
     var monthName = month[d.getMonth()];
-    var dateExpiry = new Date();
-    dateExpiry.setDate(dateExpiry.getDate() + (30 * duration));
+    var dateExpiry = vardate;
+    dateExpiry.setMonth(dateExpiry.getMonth() + duration);
 
 
-    let listPay = `UPDATE infos SET ?, datePaid = now() WHERE Stb = "${results[0].Stb}"`;
+
+    let listPay = `UPDATE infos SET ? WHERE Stb = "${results[0].Stb}"`;
     let listValues = {};
     for(var i =0; i<duration; i++){
-        listValues[month[d.getMonth() + i]] = amount;
+        listValues[month[mydate.getMonth() + i]] = amount;
     }
     listValues['dateExpiry'] = dateExpiry;
-    listValues['status'] = 1;
+    listValues['datePaid'] = mydate;
+    if(balance > 0){
+      listValues['status'] = 2;
+      listValues['balance'] = balance;
+    }else{
+      listValues['status'] = 1;
+    }
     db.query(listPay,listValues, (err,results)=>{
+      if(err){
+        console.log(err);
+      }
+    });
+    let workersql = `UPDATE worker SET ? WHERE id = "${req.user.id}"`;
+    workerValues = {
+      noOfPayments : req.user.noOfPayments + 1,
+      paymentAmount : req.user.paymentAmount + totalAmount
+    };
+    db.query(workersql,workerValues, (err,worked)=>{
       if(err){
         console.log(err);
       }
@@ -125,6 +127,8 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
         Stb : results[0].Stb,
         Amount : totalAmount,
         Mode : 'Offline',
+        validity : duration,
+        dateStart : mydate,
         dateExpiry : dateExpiry
     };
     db.query(all_payment, all_values, (err,results)=>{
@@ -138,6 +142,7 @@ route.post('/savePayment',ensureAuthenticateds,(req,res)=>{
   });
 
 });
+
 
 
 

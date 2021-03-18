@@ -75,10 +75,11 @@ route.get('/', ensureAuthenticateds, (req,res)=>{
                                 dateToday = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 
-                                //SUSPENDED LIST STATUS 0=unpaid 1=paid
-                                let sqlSusp = `UPDATE infos SET suspended = 1 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
-                                           AND dateExpiry < "${dateSusp}"; 
-                                           UPDATE infos SET status = 0 WHERE status != 2 AND dateExpiry < "${dateToday}"`;
+
+                                // let sqlSusp = `UPDATE infos SET suspended = 1 WHERE dateExpiry != STR_TO_DATE('0000-00-00 00:00:00', '%Y-%m-%d %H:%i:%s') 
+                                //            AND dateExpiry < "${dateSusp}"; 
+                                //            UPDATE infos SET status = 0 WHERE status != 2 AND dateExpiry < "${dateToday}"`;
+                                let sqlSusp = `UPDATE infos SET status = 0 WHERE status != 2 AND dateExpiry < "${dateToday}"`;
                                 db.query(sqlSusp, (err,rol)=>{
                                     if(err){
                                         console.log(err);
