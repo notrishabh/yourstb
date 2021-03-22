@@ -42,7 +42,7 @@
             <!-- Main Content -->
             <div id="content">
       
-              <%- include('../partials/topbar', {heading: 'Payments (Today)'}); %>
+              <%- include('../partials/topbar', {heading: `Payments (Today) by ${onework}`}); %>
 
               <!-- End of Topbar -->
       
@@ -54,8 +54,28 @@
                     <h1 class="h4 mb-4 text-gray-800">Payments Recieved on <%= today %></h1>
                   </div>
                   <div class="col-md-4 offset-md-4">
-                    <h1 class="h4 mb-4 text-gray-800">Total amount recieved today : <span style="color: green;"><%=sum%></span></h1>
+                    <% if(sum == null) 
+                        {sum = 0;} 
+                    %>
+                    <h1 class="h5 mb-4 text-gray-800">Total amount recieved today by <%= onework %> : <span style="color: green;"><%=sum%></span></h1>
                   </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-md-3 mb-3">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-filter"></i> Added by
+                    </a>
+                  
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <a class="dropdown-item" href="/adminPanel/payments/today/0">All</a>
+                      <% if(workerList.length > 0){
+                        for(var i = 0;i < workerList.length;i++) { %>
+                          <a class="dropdown-item" href="/adminPanel/payments/today/<%=workerList[i].id%>"><%=workerList[i].Name%></a>
+                       <% }
+                      } %>
+                    </div>
+                  </div>
+                  
                 </div>
 
                           <!-- DataTales Example -->

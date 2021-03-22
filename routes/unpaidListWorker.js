@@ -174,6 +174,7 @@ route.post('/:region_id/pay',ensureAuthenticateds,(req,res)=>{
         Stb : results[0].Stb,
         Amount : totalAmount,
         Mode : 'Offline',
+        addedBy : req.user.id,
         validity : duration,
         dateStart : mydate,
         dateExpiry : dateExpiry

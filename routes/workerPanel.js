@@ -21,6 +21,7 @@ route.get('/logout', (req,res)=>{
 
 route.use('/paymentEntry', require('./paymentEntry'));
 route.use('/unpaidList', require('./unpaidListWorker'));
+route.use('/history', require('./historyWorker'));
 
 
 

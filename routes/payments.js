@@ -7,11 +7,13 @@ const Excel = require('exceljs');
 
 
 
-route.get("/today", ensureAuthenticateds, (req, res) => {
+route.get("/today/:id", ensureAuthenticateds, (req, res) => {
   var today = new Date();
   var dd = String(today.getDate());
   var mm = String(today.getMonth() + 1);
   var yyyy = String(today.getFullYear());
+  var wid = req.params.id;
+  var onework = "All";
 
   if (mm.length < 2) 
         mm = '0' + mm;
@@ -20,51 +22,55 @@ route.get("/today", ensureAuthenticateds, (req, res) => {
 
   today = yyyy + "-" + mm + "-" + dd;
 
-  let sql = `SELECT * FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" ORDER BY id DESC`;
-  db.query(sql, (err, results) => {
-    let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}"`;
-    db.query(sql, (err,rus)=>{
-      var totalToday = rus[0].total;
-      res.render("payments/today", {
-      user: req.user,
-      results: results,
-      today: today,
-      sum : totalToday
-    });
+  if(wid == 0){
+    let workerSql = `SELECT * FROM worker`;
+    db.query(workerSql, (err,workerList)=>{
+      let sql = `SELECT * FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" ORDER BY id DESC`;
+      db.query(sql, (err, results) => {
+        let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}"`;
+        db.query(sql, (err,rus)=>{
+          var totalToday = rus[0].total;
+          res.render("payments/today", {
+          user: req.user,
+          results: results,
+          today: today,
+          sum : totalToday,
+          workerList : workerList,
+          onework : onework
+        });
+        });
+    
+      });
     });
 
-  });
+  }else{
+    let workerSql = `SELECT * FROM worker`;
+    db.query(workerSql, (err,workerList)=>{
+      let sql = `SELECT * FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" AND addedBy = "${wid}" ORDER BY id DESC`;
+      db.query(sql, (err, results) => {
+        let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE DATE_FORMAT(datePaid, "%Y-%m-%d" ) = "${today}" AND addedBy = "${wid}"`;
+        db.query(sql, (err,rus)=>{
+          let oneWorker = `SELECT * FROM worker where id = "${wid}"`;
+          db.query(oneWorker, (err,oneworkDetails)=>{
+            onework = oneworkDetails[0].Name;
+            var totalToday = rus[0].total;
+            res.render("payments/today", {
+              user: req.user,
+              results: results,
+              today: today,
+              sum : totalToday,
+              workerList : workerList,
+              onework : onework,
+            });
+          });
+        });
+    
+      });
+    });
+  }
+
+
 });
-
-route.get("/thisMonth", ensureAuthenticateds, (req, res) => {
-  var d = new Date();
-  var month = new Array();
-  month[0] = "January";
-  month[1] = "February";
-  month[2] = "March";
-  month[3] = "April";
-  month[4] = "May";
-  month[5] = "June";
-  month[6] = "July";
-  month[7] = "August";
-  month[8] = "September";
-  month[9] = "October";
-  month[10] = "November";
-  month[11] = "December";
-
-  var monthNumber = d.getMonth() + 1;
-  var monthName = month[d.getMonth()];
-
-  let sql = `SELECT * FROM all_payment WHERE month(datePaid) = "${monthNumber}" ORDER BY id DESC`;
-  db.query(sql, (err, results) => {
-    res.render("payments/thisMonth", {
-      user: req.user,
-      month: monthName,
-      results: results,
-    });
-  });
-});
-
 route.get('/thisMonth/download', ensureAuthenticateds,(req,res)=>{
   var d = new Date();
   var month = new Array();
@@ -112,6 +118,78 @@ route.get('/thisMonth/download', ensureAuthenticateds,(req,res)=>{
   })
 });
 
+route.get("/thisMonth/:id", ensureAuthenticateds, (req, res) => {
+  var wid = req.params.id;
+  var onework = "All";
+  var d = new Date();
+  var month = new Array();
+  month[0] = "January";
+  month[1] = "February";
+  month[2] = "March";
+  month[3] = "April";
+  month[4] = "May";
+  month[5] = "June";
+  month[6] = "July";
+  month[7] = "August";
+  month[8] = "September";
+  month[9] = "October";
+  month[10] = "November";
+  month[11] = "December";
+
+  var monthNumber = d.getMonth() + 1;
+  var monthName = month[d.getMonth()];
+
+  if(wid == 0){
+    let workerSql = `SELECT * FROM worker`;
+    db.query(workerSql, (err,workerList)=>{
+      let sql = `SELECT * FROM all_payment WHERE month(datePaid) = "${monthNumber}" ORDER BY id DESC`;
+      db.query(sql, (err, results) => {
+        let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE month(datePaid) = "${monthNumber}"`;
+        db.query(sql, (err, rus) => {
+
+          var totalMonth = rus[0].total;
+          res.render("payments/thisMonth", {
+            user: req.user,
+            month: monthName,
+            results: results,
+            workerList : workerList,
+            onework : onework,
+            sum : totalMonth
+          });
+        });
+      });
+    });
+  }else{
+    let workerSql = `SELECT * FROM worker`;
+    db.query(workerSql, (err,workerList)=>{
+
+      let sql = `SELECT * FROM all_payment WHERE month(datePaid) = "${monthNumber}" AND addedBy = "${wid}" ORDER BY id DESC`;
+      db.query(sql, (err, results) => {
+        let sql = `SELECT SUM(Amount) AS total FROM all_payment WHERE month(datePaid) = "${monthNumber}" AND addedBy = "${wid}"`;
+        db.query(sql, (err, rus) => {
+
+          let oneWorker = `SELECT * FROM worker where id = "${wid}"`;
+          db.query(oneWorker, (err,oneworkDetails)=>{
+            onework = oneworkDetails[0].Name;
+            var totalMonth = rus[0].total;
+            res.render("payments/thisMonth", {
+              user: req.user,
+              month: monthName,
+              results: results,
+              workerList : workerList,
+              onework : onework,
+              sum : totalMonth
+            });
+          });
+        });
+      });
+    });
+  }
+
+});
+
+
+
 
 async function sendWorkbook(workbook, response) { 
 
@@ -139,15 +217,15 @@ route.get('/thisYear', ensureAuthenticateds, (req,res)=>{
     
 });
 
-route.get('/offline', ensureAuthenticateds, (req,res)=>{
-  let sql = `SELECT * FROM offline_payment ORDER BY id DESC`;
-  db.query(sql, (err,results)=>{
-    res.render('payments/offline', {
-      user : req.user,
-      results : results
-    })
-  });
-});
+// route.get('/offline', ensureAuthenticateds, (req,res)=>{
+//   let sql = `SELECT * FROM offline_payment ORDER BY id DESC`;
+//   db.query(sql, (err,results)=>{
+//     res.render('payments/offline', {
+//       user : req.user,
+//       results : results
+//     })
+//   });
+// });
 
 route.post('/today/delete', ensureAuthenticateds, (req,res)=>{
   var pid = req.body.pid;
