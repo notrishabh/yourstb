@@ -77,6 +77,11 @@
                             <%}%>
                         </select>  
                       </div>
+                      <div class="form-group mx-sm-3 mb-2">
+                        <label class="form-check-label" for="year" >Select Year</label>
+                          <select class="form-control ml-3" name="yearDrop" id="year" required>
+                        </select>  
+                      </div>
                       <button type="submit" class="btn btn-primary mb-2">View Data</button>
                     </form>
                     
@@ -87,10 +92,10 @@
                           <!-- DataTales Example -->
 
                           <div style="display: <%=displayDetails%>;">
-                            <div class="col-md-4 offset-md-8">
+                            <div class="col-md-5 offset-md-7">
                               <div class="row align-items-center">
-                                <p class="lead mb-4 text-gray-800 mr-3">Payment records for <%=monthName%></p>
-                                <a href="/adminPanel/paidList/<%=monthDrop%>/download" class="btn btn-primary mb-3 p-2">Download <i class="fas fa-arrow-circle-down"></i></a>
+                                <p class="lead mb-4 text-gray-800 mr-3">Payment records for <%=monthName%> <%=yearDrop%> </p>
+                                <a href="/adminPanel/paidList/<%=monthDrop%>/<%=yearDrop%>/download" class="btn btn-primary mb-3 p-2">Download <i class="fas fa-arrow-circle-down"></i></a>
                               </div>
                             </div>
                             <div class="card shadow mb-4">
@@ -179,7 +184,20 @@
                     }else{
                         document.getElementById('delBtn').type = "reset";
                     }
-                }
+              }
+              var yearSelect = document.getElementById('year');
+              let curryear = new Date().getFullYear();
+              let defaultOption = document.createElement('option');
+              defaultOption.text = curryear;
+              defaultOption.value = curryear;
+              yearSelect.appendChild(defaultOption);
+              for(var i=curryear-2;i<=curryear + 10;i++)
+              {
+                  newOption = document.createElement('option');
+                  newOption.value=i;
+                  newOption.text=i;
+                  yearSelect.appendChild(newOption);
+              }
             </script>
 
 
