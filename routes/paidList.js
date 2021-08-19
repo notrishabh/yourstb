@@ -80,57 +80,60 @@ route.get('/:monthDrop/:yearDrop/download', ensureAuthenticateds,(req,res)=>{
 
     const workbook = new Excel.Workbook();
 
-    let xdsql = `SELECT infos.region_id, region.region_name 
-               FROM infos INNER JOIN region 
-               ON infos.region_id = region.id 
-               GROUP BY infos.region_id;
-               SELECT region_id, Name, Address, Stb, Mobile, ${monthName} AS Amount FROM infos WHERE ${monthName} != '0'`; 
+//    let xdsql = `SELECT infos.region_id, region.region_name 
+//               FROM infos INNER JOIN region 
+//               ON infos.region_id = region.id 
+//               GROUP BY infos.region_id;
+//               SELECT region_id, Name, Address, Stb, Mobile, ${monthName} AS Amount FROM infos WHERE ${monthName} != '0'`; 
+//
+    let sql = `SELECT i.region_id, r.region_name FROM all_payment AS p JOIN infos AS i ON p.Stb = i.Stb JOIN region as r ON r.id = i.region_id GROUP BY r.region_name;SELECT p.Name,p.Address,p.Mobile,p.Stb,p.Amount/p.validity AS Amount,p.dateStart,p.dateExpiry, region_id FROM all_payment AS p,infos WHERE MONTH(p.dateStart) <= ${monthDrop} + 1 and Month(p.dateExpiry) > ${monthDrop} + 1 and p.dateStart != 0 and p.validity != 0 and YEAR(p.dateStart) = ${yearDrop} AND p.Stb = infos.Stb`;
 
-    let sql = `SELECT Name,Address,Mobile,Stb,Amount/validity AS Amount,dateStart,dateExpiry FROM all_payment WHERE MONTH(dateStart) <= ${monthDrop}+1 and Month(dateExpiry) > ${monthDrop}+1 and dateStart != 0 and validity != 0 and YEAR(dateStart) = ${yearDrop}`;
-    const worksheet = workbook.addWorksheet('Paid list');
-    worksheet.views = [
-        {state: 'frozen', ySplit: 1, activeCell: 'A1'}
-    ];
-    worksheet.columns = [
-        { header: 'Name', key: 'Name', width: 32 },
-        { header: 'Address', key: 'Address', width: 30 },
-        { header: 'Stb', key: 'Stb', width: 15},
-        { header: 'Mobile', key: 'Mobile', width: 15 },
-        { header: 'Amount', key: 'Amount', width: 10 },
-    ];
+
+    //let xddd=    `SELECT Name,Address,Mobile,Stb,Amount/validity AS Amount,dateStart,dateExpiry FROM all_payment WHERE MONTH(dateStart) <= ${monthDrop}+1 and Month(dateExpiry) > ${monthDrop}+1 and dateStart != 0 and validity != 0 and YEAR(dateStart) = ${yearDrop}`;
+    //const worksheet = workbook.addWorksheet('Paid list');
+   // worksheet.views = [
+   //     {state: 'frozen', ySplit: 1, activeCell: 'A1'}
+   // ];
+   // worksheet.columns = [
+   //     { header: 'Name', key: 'Name', width: 32 },
+   //     { header: 'Address', key: 'Address', width: 30 },
+   //     { header: 'Stb', key: 'Stb', width: 15},
+   //     { header: 'Mobile', key: 'Mobile', width: 15 },
+   //     { header: 'Amount', key: 'Amount', width: 10 },
+   // ];
+   // db.query(sql, (err,results)=>{
+   //     results.forEach((result)=>{
+   //         var data = JSON.parse(JSON.stringify(result));
+   //         worksheet.addRow(data);
+   //     });
+   //     sendWorkbook(workbook,res,monthName);
+   // })
     db.query(sql, (err,results)=>{
-        results.forEach((result)=>{
-            var data = JSON.parse(JSON.stringify(result));
-            worksheet.addRow(data);
+        results[0].forEach(lol=>{
+            let worksheet = workbook.addWorksheet(lol.region_name);
+            worksheet.views = [
+                {state: 'frozen', ySplit: 1, activeCell: 'A1'}
+            ];
+            worksheet.columns = [
+                { header: 'Name', key: 'Name', width: 32 },
+                { header: 'Address', key: 'Address', width: 30 },
+                { header: 'Stb', key: 'Stb', width: 15},
+                { header: 'Mobile', key: 'Mobile', width: 15 },
+                { header: 'Amount', key: 'Amount', width: 10 },
+            ];
+            
+            results[1].forEach((result)=>{
+                if(result.region_id == lol.region_id){
+                    var data = JSON.parse(JSON.stringify(result));
+                    // console.log(data);
+                    worksheet.addRow(data);
+                }
+           
+            }); 
+
         });
         sendWorkbook(workbook,res,monthName);
-    })
-    //db.query(sql, (err,results)=>{
-    //    results[0].forEach(lol=>{
-    //        let worksheet = workbook.addWorksheet(lol.region_name);
-    //        worksheet.views = [
-    //            {state: 'frozen', ySplit: 1, activeCell: 'A1'}
-    //        ];
-    //        worksheet.columns = [
-    //            { header: 'Name', key: 'Name', width: 32 },
-    //            { header: 'Address', key: 'Address', width: 30 },
-    //            { header: 'Stb', key: 'Stb', width: 15},
-    //            { header: 'Mobile', key: 'Mobile', width: 15 },
-    //            { header: 'Amount', key: 'Amount', width: 10 },
-    //        ];
-    //        
-    //        results[1].forEach((result)=>{
-    //            if(result.region_id == lol.region_id){
-    //                var data = JSON.parse(JSON.stringify(result));
-    //                // console.log(data);
-    //                worksheet.addRow(data);
-    //            }
-    //       
-    //        }); 
-
-    //    });
-    //    sendWorkbook(workbook,res,monthName);
-    //});
+    });
 
 
     // let newsql = `SELECT infos.region_id, region.region_name FROM infos INNER JOIN region ON infos.region_id = region.id GROUP BY infos.region_id`;
