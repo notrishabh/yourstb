@@ -195,6 +195,7 @@ route.use('/worker', require('./worker'));
 route.use('/newStb', require('./newStb'));
 route.use('/region', require('./region'));
 route.use('/history', require('./history'));
+route.use('/pdfmake', require('./pdfmake'));
 
 
 module.exports = route;

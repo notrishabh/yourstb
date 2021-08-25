@@ -107,6 +107,7 @@
                               <th>Date Paid</th>
                               <th>Date Start</th>
                               <th>Date Expired</th>
+                              <th>Bill</th>
                             </tr>
                           </thead>
                           <tbody> 
@@ -123,6 +124,7 @@
                                 <td><%= date[0] %></td>
                                 <td><%= dateStart[0] %></td>
                                 <td><%= dateExpiry[0] %></td>
+                                <td><a href="/adminPanel/pdfmake/<%= results[i].id %>/pdf"><i class="fas fa-file-pdf" style="color: red; font-size: 20px;"></i></a></td>
                               </tr>
                             <% } %> 
                                 
