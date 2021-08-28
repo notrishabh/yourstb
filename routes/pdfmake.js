@@ -38,7 +38,7 @@ router.get("/:id/pdf", ensureAuthenticateds, (req, res, next) => {
                                     bold: true,
                                     margin: [0, 0, 0, 5],
                                 },
-                                "H. No. 13/99 Geeta Colony, Delhi-110031",
+                                "H. No. 7/211 Geeta Colony, Delhi-110031",
                                 "GSTIN : 07ABMPC5563H1ZL",
                             ],
                             alignment: "left",
@@ -114,7 +114,7 @@ router.get("/:id/pdf", ensureAuthenticateds, (req, res, next) => {
                             ],
                         ],
                     },
-                    margin: [0, 75, 0, 0],
+                    margin: [0, 75, 10, 0],
                     //layout: "lightHorizontalLines",
                 },
             ],
@@ -124,7 +124,7 @@ router.get("/:id/pdf", ensureAuthenticateds, (req, res, next) => {
         pdfDoc.getBase64((data) => {
             res.writeHead(200, {
                 "Content-Type": "application/pdf",
-                "Content-Disposition": `attachment;filename="${results[0].Name}.pdf"`,
+                "Content-Disposition": `attachment;filename="KV_Cable_INV.pdf"`,
             });
 
             const download = Buffer.from(data.toString("utf-8"), "base64");
