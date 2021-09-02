@@ -9,6 +9,7 @@ const { ensureAuthenticateds } = require("../config/adminAuth"); //Login Authent
 
 pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
+//PDF making comment
 router.get("/:id/pdf", ensureAuthenticateds, (req, res, next) => {
     //res.send('PDF');
     let id = req.params.id;
